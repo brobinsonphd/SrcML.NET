@@ -31,7 +31,7 @@ namespace ABB.SrcML
         /// <summary>
         /// XNamespace for the SrcML Position XML namespace
         /// </summary>
-        public static readonly XNamespace NS = "http://www.sdml.info/srcML/position";
+        public static readonly XNamespace NS = "http://www.srcML.org/srcML/position";
 
         /// <summary>
         /// XMLNS prefix for the SrcML OP namespace
@@ -44,14 +44,14 @@ namespace ABB.SrcML
         public const string ArgumentLabel = "--position";
 
         /// <summary>
-        /// This attribute indicates the line number that the source element is located on
+        /// This attribute indicates the line and column number (line:column) that the source element starting location is located on
         /// </summary>
-        public static readonly XName Line = NS + "line";
+        public static readonly XName Start = NS + "start";
 
         /// <summary>
-        /// This attribute indicates the column that the source element starts at
+        /// This attribute indicates the line and column number (line:column) that the source element ends at
         /// </summary>
-        public static readonly XName Column = NS + "column";
+        public static readonly XName End = NS + "end";
         
     }
 }

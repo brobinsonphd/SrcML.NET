@@ -41,8 +41,8 @@ namespace ABB.SrcML.Data.Test {
         public void TestDataFileNameMap(bool compressionEnabled) {
             var generator = new DataGenerator();
             var mapping = new DataFileNameMapping(TEST_DIRECTORY, compressionEnabled);
-            var sourcePath = @"..\..\TestInputs\function_def.cpp";
-            var srcmlPath = @"..\..\TestInputs\function_def.xml";
+            var sourcePath = @"c:\SrcML\TestInputs\function_def.cpp";
+            var srcmlPath = @"c:\SrcML\TestInputs\function_def.xml";
 
             var mappedPath = mapping.GetTargetPath(sourcePath);
             

@@ -1,7 +1,6 @@
 ﻿using ABB.SrcML.Test.Utilities;
 using EnvDTE;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -37,7 +37,7 @@ namespace ABB.SrcML.Data.Test {
 
         [Test]
         public void TestFindMethodCalls_Nested() {
-            File.Copy(@"..\..\TestInputs\nested_method_calls.cpp", Path.Combine(TestDir, "nested_method_calls.cpp"));
+            File.Copy(@"c:\SrcML\TestInputs\nested_method_calls.cpp", Path.Combine(TestDir, "nested_method_calls.cpp"));
 
             using(var dataProj = new DataProject<CompleteWorkingSet>(DataDir, TestDir, SrcMLDir)) {
                 dataProj.Update();
@@ -49,7 +49,7 @@ namespace ABB.SrcML.Data.Test {
                     expected = new[] {
                         globalScope.FindExpressions<MethodCall>(true).First(mc => mc.Name == "ToString"),
                         globalScope.FindExpressions<MethodCall>(true).First(mc => mc.Name == "SomeMethodCall"),
-                        globalScope.FindExpressions<MethodCall>(true).First(mc => mc.Name == "printf")
+                        globalScope.FindExpressions<MethodCall>(true).First(mc => mc.Name == "printf")                                                
                     };
                 } finally {
                     dataProj.WorkingSet.ReleaseReadLock();
@@ -69,7 +69,7 @@ namespace ABB.SrcML.Data.Test {
 
         [Test]
         public void TestFindMethodCalls_Simple() {
-            File.Copy(@"..\..\TestInputs\function_def.cpp", Path.Combine(TestDir, "function_def.cpp"));
+            File.Copy(@"c:\SrcML\TestInputs\function_def.cpp", Path.Combine(TestDir, "function_def.cpp"));
 
             using(var dataProj = new DataProject<CompleteWorkingSet>(DataDir, TestDir, SrcMLDir)) {
                 dataProj.Update();
@@ -94,7 +94,7 @@ namespace ABB.SrcML.Data.Test {
 
         [Test]
         public void TestFindScopeForAdjacentMethods() {
-            File.Copy(@"..\..\TestInputs\adjacent_methods.cpp", Path.Combine(TestDir, "adjacent_methods.cpp"));
+            File.Copy(@"c:\srcML\TestInputs\adjacent_methods.cpp", Path.Combine(TestDir, "adjacent_methods.cpp"));
 
             using(var dataProj = new DataProject<CompleteWorkingSet>(DataDir, TestDir, SrcMLDir)) {
                 dataProj.Update();
@@ -130,15 +130,14 @@ namespace ABB.SrcML.Data.Test {
                 Assert.AreSame(fooMethod, query.Execute(locationInFoo));
 
                 var lineBetweenMethods = new SourceLocation(testFile, 2, 1);
-                Assert.That(mainMethod.PrimaryLocation.Contains(lineBetweenMethods));
-                Assert.IsFalse(fooMethod.PrimaryLocation.Contains(lineBetweenMethods));
-                Assert.AreSame(mainMethod, query.Execute(lineBetweenMethods));
+                Assert.IsFalse(mainMethod.PrimaryLocation.Contains(lineBetweenMethods));
+                Assert.IsFalse(fooMethod.PrimaryLocation.Contains(lineBetweenMethods));                
             }
         }
 
         [Test]
         public void TestOverloadedMethodCallResolution() {
-            File.Copy(@"..\..\TestInputs\csharp_overload_calls.cs", Path.Combine(TestDir, "csharp_overload_calls.cs"));
+            File.Copy(@"c:\SrcML\TestInputs\csharp_overload_calls.cs", Path.Combine(TestDir, "csharp_overload_calls.cs"));
             using(var project = new DataProject<CompleteWorkingSet>(DataDir, TestDir, SrcMLDir)) {
                 project.Update();
 
@@ -184,8 +183,8 @@ namespace ABB.SrcML.Data.Test {
 
         [Test]
         public void TestOverloadedMethodCallResolutionWithCallingObject() {
-            File.Copy(@"..\..\TestInputs\csharp_overload_callingobj.cs", Path.Combine(TestDir, "csharp_overload_callingobj.cs"));
-            File.Copy(@"..\..\TestInputs\csharp_overload_calls.cs", Path.Combine(TestDir, "csharp_overload_calls.cs"));
+            File.Copy(@"c:\SrcML\TestInputs\csharp_overload_callingobj.cs", Path.Combine(TestDir, "csharp_overload_callingobj.cs"));
+            File.Copy(@"c:\SrcML\TestInputs\csharp_overload_calls.cs", Path.Combine(TestDir, "csharp_overload_calls.cs"));
             using(var project = new DataProject<CompleteWorkingSet>(DataDir, TestDir, SrcMLDir)) {
                 project.Update();
 

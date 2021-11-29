@@ -16,7 +16,7 @@ namespace ABB.SrcML {
         /// <summary>
         /// The src2srcml executable name
         /// </summary>
-        public const string Src2SrcMLExecutableName = "src2srcml.exe";
+        public const string Src2SrcMLExecutableName = "srcml.exe";
 
         /// <summary>
         /// Constructs a new object with <see cref="ApplicationDirectory"/> set via <see cref="SrcMLHelper.GetSrcMLDefaultDirectory()"/>.
@@ -58,7 +58,7 @@ namespace ABB.SrcML {
         public void GenerateSrcMLFromFile(string fileName, string xmlFileName, Language language, Collection<string> namespaceArguments, Dictionary<string,Language> extensionMapping) {
             Collection<string> arguments = GenerateArguments(xmlFileName, language, namespaceArguments, extensionMapping);
 
-            arguments.Add(QuoteFileName(fileName));
+            arguments.Add(QuoteFileName(fileName));            
 
             try {
                 Run(arguments);
@@ -160,7 +160,7 @@ namespace ABB.SrcML {
                 arguments.Add(namespaceArgument);
             }
 
-            arguments.Add(MakeExtensionMapArgument(extensionMapping));
+            //arguments.Add(MakeExtensionMapArgument(extensionMapping));
 
             if(!String.IsNullOrEmpty(xmlFileName)) {
                 arguments.Add(MakeOutputArgument(xmlFileName));

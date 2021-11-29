@@ -33,20 +33,20 @@ namespace ABB.SrcML.Test
         public void GetXPathExtensionTest()
         {
             File.WriteAllText("test.xml", @"<?xml version=""1.0"" encoding=""utf-8""?>
-<unit  xmlns=""http://www.sdml.info/srcML/src"" xmlns:cpp=""http://www.sdml.info/srcML/cpp"">
+<unit  xmlns=""http://www.srcML.org/srcML/src"" xmlns:cpp=""http://www.srcML.org/srcML/src"">
 <unit languageFilter=""C"" filename=""c:\Test\myapp.c"">
 <cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;stdio.h&gt;</cpp:file></cpp:include>
 
-<function_decl><type><name>void</name></type> <name>foo</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>int</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>foo</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>)</parameter_list>;</function_decl>
 
-<method><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name>char</name> **</type><name>argv</name></decl></param>)</parameter_list>
+<method><type><name>int</name></type> <name>main</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>argc</name></decl></parameter>, <parameter><decl><type><name>char</name> **</type><name>argv</name></decl></parameter>)</parameter_list>
 <block>{
         <expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><call><name>atoi</name><argument_list>(<argument><expr><name><name>argv</name><index>[<expr>1</expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>atoi</name><argument_list>(<argument><expr><name><name>argv</name><index>[<expr>2</expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
         <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>""Finished with %s and %s""</expr></argument>, <argument><expr><name><name>argv</name><index>[<expr>1</expr>]</index></name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr>2</expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
         <return>return <expr>0</expr>;</return>
 }</block></method>
 
-<method><type><name>void</name></type> <name>foo</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>int</name></type> <name>b</name></decl></param>)</parameter_list>
+<method><type><name>void</name></type> <name>foo</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>)</parameter_list>
 <block>{
         <for>for(<init><decl><type><name>int</name></type> <name>i</name> =<init> <expr><name>a</name></expr></init></decl>;</init> <condition><expr><name>i</name> &lt; <name>b</name></expr>;</condition> <incr><expr><name>i</name>++</expr></incr>)
         <block>{

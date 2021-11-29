@@ -25,7 +25,7 @@ namespace ABB.SrcML {
         /// <summary>
         /// XNamespace for the SrcML SRC XML namespace
         /// </summary>
-        public static readonly XNamespace NS = "http://www.sdml.info/srcML/src";
+        public static readonly XNamespace NS = "http://www.srcML.org/srcML/src";
 
         /// <summary>
         /// XMLNS prefix for the SrcML SRC namespace
@@ -43,9 +43,16 @@ namespace ABB.SrcML {
         /// <summary>
         /// XML Markup for the source code block:
         /// 
-        /// <code lang="XML">&lt;block&gt;{ ...statements... }&lt;block&gt;</code>
+        /// <code lang="XML">&lt;block&gt;&lt;block_content&gt;{ ...statements... }&lt;/block_content&gt;&lt;/block&gt;</code>
         /// </summary>
         public static readonly XName Block = NS + "block";
+
+        /// <summary>
+        /// XML Markup for the source code block:
+        /// 
+        /// <code lang="XML">&lt;block&gt;&lt;block_content&gt;{ ...statements... }&lt;/block_content&gt;&lt;/block&gt;</code>
+        /// </summary>
+        public static readonly XName BlockContent = NS + "block_content";
 
         // Comment
         /// <summary>
@@ -125,6 +132,11 @@ namespace ABB.SrcML {
         /// markup for the decl tag
         /// </summary>
         public static readonly XName Declaration = NS + "decl";
+       
+        /// <summary>
+        /// markup for the property tag
+        /// </summary>
+        public static readonly XName Property = NS + "property";
 
         /// <summary>
         /// markup for the type tag
@@ -186,6 +198,14 @@ namespace ABB.SrcML {
         /// markup for the if tag
         /// </summary>
         public static readonly XName If = NS + "if";
+
+        // if statement
+        /// <summary>
+        /// markup for the IfStatement tag
+        /// <code lang="XML">&lt;if_stmt&gt;&lt;if&gt;{ ...statements... }&lt;/if&gt;&lt;/if_stmt&gt;</code>
+        /// </summary>
+        public static readonly XName IfStatement = NS + "if_stmt";
+
         /// <summary>
         /// markup for the then block tag
         /// </summary>
@@ -213,6 +233,12 @@ namespace ABB.SrcML {
         /// markup for the for tag
         /// </summary>
         public static readonly XName For = NS + "for";
+
+        // control statement in FOR loop
+        /// <summary>
+        /// markup for the control tag
+        /// </summary>
+        public static readonly XName Control = NS + "control";
 
         /// <summary>
         /// markup for the foreach tag
@@ -299,7 +325,7 @@ namespace ABB.SrcML {
         /// <summary>
         /// markup for the param tag
         /// </summary>
-        public static readonly XName Parameter = NS + "param";
+        public static readonly XName Parameter = NS + "parameter";
 
         /// <summary>
         /// markup for the specifier tag
@@ -321,6 +347,12 @@ namespace ABB.SrcML {
         /// markup for the class_decl tag
         /// </summary>
         public static readonly XName ClassDeclaration = NS + "class_decl";
+
+        // Interface elements
+        /// <summary>
+        /// markup for the interface tag
+        /// </summary>
+        public static readonly XName Interface = NS + "interface";
 
         /// <summary>
         /// markup for the struct tag
@@ -351,7 +383,7 @@ namespace ABB.SrcML {
         /// <summary>
         /// markup for the member_list tag
         /// </summary>
-        public static readonly XName MemberList = NS + "member_list";
+        public static readonly XName MemberInitList = NS + "member_init_list";
 
         /// <summary>
         /// markup for the constructor_decl tag
@@ -364,6 +396,19 @@ namespace ABB.SrcML {
         public static readonly XName Destructor = NS + "destructor";
 
         /// <summary>
+        /// Operator element -- all operators are surrounded with this:
+        /// e.g. &lt;operator&gt;-&lt;&lt;/operator&gt;
+        /// </summary>
+        public static readonly XName Operator = NS + "operator";
+
+        /// <summary>
+        /// Literal element -- all literals are surrounded with this:
+        /// e.g. &lt;literal&gt;-&lt;&lt;/literal&gt;
+        /// &lt;lit:literal type="string"&gt;"foo"&lt;/lit:literal&gt;
+        /// </summary>
+        public static readonly XName Literal = NS + "literal";
+
+        /// <summary>
         /// markup for the destructor_decl tag
         /// </summary>
         public static readonly XName DestructorDeclaration = NS + "destructor_decl";
@@ -372,6 +417,11 @@ namespace ABB.SrcML {
         /// markup for the super tag
         /// </summary>
         public static readonly XName Super = NS + "super";
+
+        /// <summary>
+        /// markup for the super_list tag
+        /// </summary>
+        public static readonly XName SuperList = NS + "super_list";
 
         /// <summary>
         /// markup for the extends java tag
@@ -420,6 +470,11 @@ namespace ABB.SrcML {
         /// markup for the namespace tag
         /// </summary>
         public static readonly XName Namespace = NS + "namespace";
+
+        /// <summary>
+        /// markup for the using statement tag
+        /// </summary>
+        public static readonly XName UsingStatement = NS + "using_stmt";
 
         /// <summary>
         /// markup for the using tag

@@ -142,10 +142,7 @@ namespace ABB.SrcML {
                 throw new ArgumentNullException("writer");
 
             writer.WriteAttributeString("xmlns", CPP.Prefix, null, CPP.NS.NamespaceName);
-            writer.WriteAttributeString("xmlns", LIT.Prefix, null, LIT.NS.NamespaceName);
-            writer.WriteAttributeString("xmlns", OP.Prefix, null, OP.NS.NamespaceName);
             writer.WriteAttributeString("xmlns", POS.Prefix, null, POS.NS.NamespaceName);
-            writer.WriteAttributeString("xmlns", TYPE.Prefix, null, TYPE.NS.NamespaceName);
         }
 
         public void AddUnits(IEnumerable<XElement> units) {

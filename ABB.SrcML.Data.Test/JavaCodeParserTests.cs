@@ -32,7 +32,8 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateAliasesForFiles_ImportClass() {
             //import x.y.z;
-            string xml = @"<import>import <name><name>x</name><op:operator>.</op:operator><name>y</name><op:operator>.</op:operator><name>z</name></name>;</import>";
+            /*string xml = @"<import>import <name><name>x</name><operator>.</operator><name>y</name><operator>.</operator><name>z</name></name>;</import>";*/
+            string xml = @"<import>import <name><name>x</name><operator>.</operator><name>y</name><operator>.</operator><name>z</name></name>;</import>";
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
             var globalScope = codeParser.ParseFileUnit(xmlElement);
@@ -47,7 +48,9 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateAliasesForFiles_ImportNamespace() {
             // import x . /*test */ y  /*test */ . z .* /*test*/;
-            string xml = @"<import>import <name><name>x</name> <op:operator>.</op:operator> <comment type=""block"">/*test */</comment> <name>y</name>  <comment type=""block"">/*test */</comment> <op:operator>.</op:operator> <name>z</name></name> .* <comment type=""block"">/*test*/</comment>;</import>";
+            //string xml = @"<import>import <name><name>x</name> <operator>.</operator> <comment type=""block"">/*test */</comment> <name>y</name>  <comment type=""block"">/*test */</comment> <operator>.</operator> <name>z</name></name> .* <comment type=""block"">/*test*/</comment>;</import>";*/
+            string xml = @"<import>import <name><name>x</name> <operator>.</operator> <comment type=""block"">/*test */</comment> <name>y</name>  <comment type=""block"">/*test */</comment> <operator>.</operator> <name>z</name> <operator>.</operator><name>*</name></name> <comment type=""block"">/*test*/</comment>;</import>";
+            
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
             var globalScope = codeParser.ParseFileUnit(xmlElement);
@@ -62,8 +65,11 @@ namespace ABB.SrcML.Data.Test {
         public void TestCreateTypeDefinition_ClassInPackage() {
             //package A.B.C;
             //public class D { }
-            string xml = @"<package>package <name><name>A</name><op:operator>.</op:operator><name>B</name><op:operator>.</op:operator><name>C</name></name>;</package>
+            /*string xml = @"<package>package <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name>;</package>
+<class><specifier>public</specifier> class <name>D</name> <block>{ }</block></class>";*/
+            string xml = @"<package>package <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name>;</package>
 <class><specifier>public</specifier> class <name>D</name> <block>{ }</block></class>";
+
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "D.java");
 
             var globalScope = codeParser.ParseFileUnit(xmlElement);
@@ -96,8 +102,10 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateTypeDefinitions_Class() {
             // class A { }
-            string xml = @"<class>class <name>A</name> <block>{
-}</block></class>";
+            /*string xml = @"<class>class <name>A</name> <block>{
+}</block></class>";*/
+            string xml = @"<class>class <name>A</name> <block>{ }</block></class>";
+
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
             var globalScope = codeParser.ParseFileUnit(xmlElement);
@@ -112,12 +120,13 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateTypeDefinitions_ClassInFunction() {
             // class A { int foo() { class B { } } }
-            string xml = @"<class>class <name>A</name> <block>{
+            /*string xml = @"<class>class <name>A</name> <block>{
 	<function><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{
 		<class>class <name>B</name> <block>{
 		}</block></class>
 }</block></function>
-}</block></class>";
+}</block></class>";*/
+            string xml = @"<class>class <name>A</name> <block>{ <function><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content> <class>class <name>B</name> <block>{ }</block></class> </block_content>}</block></function> }</block></class>";
 
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
@@ -140,7 +149,10 @@ namespace ABB.SrcML.Data.Test {
             //public class Foo extends xyzzy implements A, B, C {
             //    public int bar;
             //}
-            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <super><extends>extends <name>xyzzy</name></extends> <implements>implements <name>A</name>, <name>B</name>, <name>C</name></implements></super> <block>{
+            /*string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <super><extends>extends <name>xyzzy</name></extends> <implements>implements <name>A</name>, <name>B</name>, <name>C</name></implements></super> <block>{
+    <decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
+}</block></class>";*/
+            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <super_list><extends>extends <super><name>xyzzy</name></super></extends> <implements>implements <super><name>A</name></super>, <super><name>B</name></super>, <super><name>C</name></super></implements></super_list> <block>{
     <decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
 }</block></class>";
 
@@ -166,10 +178,11 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateTypeDefinitions_ClassWithInnerClass() {
             // class A { class B { } }
-            string xml = @"<class>class <name>A</name> <block>{
+            /*string xml = @"<class>class <name>A</name> <block>{
 	<class>class <name>B</name> <block>{
 	}</block></class>
-}</block></class>";
+}</block></class>";*/
+            string xml = @"<class>class <name>A</name> <block>{ <class>class <name>B</name> <block>{ }</block></class> }</block></class>";
 
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
@@ -186,8 +199,9 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateTypeDefinitions_ClassWithParents() {
             // class A implements B,C,D { }
-            string xml = @"<class>class <name>A</name> <super><implements>implements <name>B</name>,<name>C</name>,<name>D</name></implements></super> <block>{
-}</block></class>";
+            /*string xml = @"<class>class <name>A</name> <super><implements>implements <name>B</name>,<name>C</name>,<name>D</name></implements></super> <block>{
+}</block></class>";*/
+            string xml = @"<class>class <name>A</name> <super_list><implements>implements <super><name>B</name></super>,<super><name>C</name></super>,<super><name>D</name></super></implements></super_list> <block>{ }</block></class>";
 
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
@@ -209,7 +223,8 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateTypeDefinitions_ClassWithQualifiedParent() {
             // class D implements A.B.C { }
-            string xml = @"<class>class <name>D</name> <super><implements>implements <name><name>A</name><op:operator>.</op:operator><name>B</name><op:operator>.</op:operator><name>C</name></name></implements></super> <block>{ }</block></class>";
+            /*string xml = @"<class>class <name>D</name> <super><implements>implements <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></implements></super> <block>{ }</block></class>";*/
+            string xml = @"<class>class <name>D</name> <super_list><implements>implements <super><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super></implements></super_list> <block>{ }</block></class>";
 
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "D.java");
 
@@ -236,9 +251,13 @@ namespace ABB.SrcML.Data.Test {
             //public class Foo extends xyzzy {
             //    public int bar;
             //}
-            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <super><extends>extends <name>xyzzy</name></extends></super> <block>{
+            /*string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <super><extends>extends <name>xyzzy</name></extends></super> <block>{
+    <decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
+}</block></class>";*/
+            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <super_list><extends>extends <super><name>xyzzy</name></super></extends></super_list> <block>{
     <decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
 }</block></class>";
+
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "Foo.java");
 
             var actual = codeParser.ParseFileUnit(xmlElement).ChildStatements.First() as TypeDefinition;
@@ -254,11 +273,12 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateTypeDefinitions_InnerClassWithNamespace() {
             // package A; class B { class C { } }
-            string xml = @"<package>package <name>A</name>;</package>
+            /*string xml = @"<package>package <name>A</name>;</package>
 <class>class <name>B</name> <block>{
 	<class>class <name>C</name> <block>{
 	}</block></class>
-}</block></class>";
+}</block></class>";*/
+            string xml = @"<package>package <name>A</name>;</package> <class>class <name>B</name> <block>{ <class>class <name>C</name> <block>{ }</block></class> }</block></class>";
 
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "B.java");
             var globalScope = codeParser.ParseFileUnit(xmlElement);
@@ -281,8 +301,9 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateTypeDefinitions_Interface() {
             // interface A { }
-            string xml = @"<class type=""interface"">interface <name>A</name> <block>{
-}</block></class>";
+            /*string xml = @"<class type=""interface"">interface <name>A</name> <block>{
+}</block></class>";*/
+            string xml = @"<interface>interface <name>A</name> <block>{ }</block></interface>";
 
             XElement xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
@@ -297,9 +318,10 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestFieldCreation() {
             // # A.java class A { int B; }
-            string xml = @"<class>class <name>A</name> <block>{
+            /*string xml = @"<class>class <name>A</name> <block>{
     <decl_stmt><decl><type><name>int</name></type> <name>B</name></decl>;</decl_stmt>
-}</block></class>";
+}</block></class>";*/
+            string xml = @"<class>class <name>A</name> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>B</name></decl>;</decl_stmt> }</block></class>";
 
             var xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
@@ -320,9 +342,13 @@ namespace ABB.SrcML.Data.Test {
             //public class Foo {
             //    bool Bar() { return true; }
             //}
-            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{
+            /*string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{
     <function><type><name>bool</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>true</name></expr>;</return> }</block></function>
+}</block></class>";*/
+            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{
+    <function><type><name>bool</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""boolean"">true</literal></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             var unit = fileSetup.GetFileUnitForXmlSnippet(xml, "Foo.java");
 
             var globalScope = codeParser.ParseFileUnit(unit);
@@ -336,9 +362,13 @@ namespace ABB.SrcML.Data.Test {
             //public class Foo {
             //    public bool Bar() { return true; }
             //}
-            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{
+            /*string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{
     <function><type><specifier>public</specifier> <name>bool</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>true</name></expr>;</return> }</block></function>
+}</block></class>";*/
+            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{
+    <function><type><specifier>public</specifier> <name>bool</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""boolean"">true</literal></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             var unit = fileSetup.GetFileUnitForXmlSnippet(xml, "Foo.java");
 
             var globalScope = codeParser.ParseFileUnit(unit);
@@ -352,8 +382,11 @@ namespace ABB.SrcML.Data.Test {
             //public class Foo {
             //    static public bool Bar() { return true; }
             //}
-            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{
+            /*string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{
     <function><type><specifier>static</specifier> <specifier>public</specifier> <name>bool</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>true</name></expr>;</return> }</block></function>
+}</block></class>";*/
+            string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{
+    <function><type><specifier>static</specifier> <specifier>public</specifier> <name>bool</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""boolean"">true</literal></expr>;</return> </block_content>}</block></function>
 }</block></class>";
             var unit = fileSetup.GetFileUnitForXmlSnippet(xml, "Foo.java");
 
@@ -366,6 +399,7 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestGetAccessModifierForType_None() {
             //class Foo {}
+            /*string xml = @"<class>class <name>Foo</name> <block>{}</block></class>";*/
             string xml = @"<class>class <name>Foo</name> <block>{}</block></class>";
             var unit = fileSetup.GetFileUnitForXmlSnippet(xml, "Foo.java");
 
@@ -378,6 +412,7 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestGetAccessModifierForType_Normal() {
             //public class Foo {}
+            /*string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{}</block></class>";*/
             string xml = @"<class><specifier>public</specifier> class <name>Foo</name> <block>{}</block></class>";
             var unit = fileSetup.GetFileUnitForXmlSnippet(xml, "Foo.java");
 
@@ -390,6 +425,7 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestGetAccessModifierForType_Static() {
             //static public class Foo {}
+            /*string xml = @"<class><specifier>static</specifier> <specifier>public</specifier> class <name>Foo</name> <block>{}</block></class>";*/
             string xml = @"<class><specifier>static</specifier> <specifier>public</specifier> class <name>Foo</name> <block>{}</block></class>";
             var unit = fileSetup.GetFileUnitForXmlSnippet(xml, "Foo.java");
 
@@ -408,16 +444,23 @@ namespace ABB.SrcML.Data.Test {
             //    B b;
             //    boolean Contains() { b.Contains(); }
             //}
+            /*string a_xml = @"<class>class <name>A</name> <block>{
+    <decl_stmt><decl><type><name>B</name></type> <name>b</name></decl>;</decl_stmt>
+    <function><type><name>boolean</name></type> <name>Contains</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><call><name><name>b</name><operator>.</operator><name>Contains</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></function>
+}</block></class>";*/
             string a_xml = @"<class>class <name>A</name> <block>{
     <decl_stmt><decl><type><name>B</name></type> <name>b</name></decl>;</decl_stmt>
-    <function><type><name>boolean</name></type> <name>Contains</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><call><name><name>b</name><op:operator>.</op:operator><name>Contains</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></function>
+    <function><type><name>boolean</name></type> <name>Contains</name><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><call><name><name>b</name><operator>.</operator><name>Contains</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> </block_content>}</block></function>
 }</block></class>";
 
             //class B {
             //    boolean Contains() { return true; }
             //}
+            /*string b_xml = @"<class>class <name>B</name> <block>{
+    <function><type><name>boolean</name></type> <name>Contains</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=""boolean"">true</literal></expr>;</return> }</block></function>
+}</block></class>";*/
             string b_xml = @"<class>class <name>B</name> <block>{
-    <function><type><name>boolean</name></type> <name>Contains</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><lit:literal type=""boolean"">true</lit:literal></expr>;</return> }</block></function>
+    <function><type><name>boolean</name></type> <name>Contains</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""boolean"">true</literal></expr>;</return> </block_content>}</block></function>
 }</block></class>";
 
             var fileUnitA = fileSetup.GetFileUnitForXmlSnippet(a_xml, "A.java");
@@ -453,12 +496,20 @@ namespace ABB.SrcML.Data.Test {
             //        void Bar() { return this.a; }
             //    }
             //}
-            string a_xml = @"<class>class <name>A</name> <block>{
+            /*string a_xml = @"<class>class <name>A</name> <block>{
     <function><type><name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{ }</block></function>
     <class>class <name>B</name> <block>{
         <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
-        <function><type><name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><call><name><name>this</name><op:operator>.</op:operator><name>Bar</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></function>
-        <function><type><name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>this</name><op:operator>.</op:operator><name>a</name></expr>;</return> }</block></function>
+        <function><type><name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>Bar</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></function>
+        <function><type><name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>this</name><operator>.</operator><name>a</name></expr>;</return> }</block></function>
+    }</block></class>
+}</block></class>";*/
+            string a_xml = @"<class>class <name>A</name> <block>{
+    <function><type><name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
+    <class>class <name>B</name> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
+        <function><type><name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>Bar</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> </block_content>}</block></function>
+        <function><type><name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name><name>this</name><operator>.</operator><name>a</name></name></expr>;</return> </block_content>}</block></function>
     }</block></class>
 }</block></class>";
 
@@ -495,15 +546,25 @@ namespace ABB.SrcML.Data.Test {
             //    super.Foo(); 
             //  }
             //}
-            string xml = @"<class>class <name>B</name> <block>{
+            /*string xml = @"<class>class <name>B</name> <block>{
   <function><type><specifier>public</specifier> <name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ }</block></function> 
 }</block></class>
 <class>class <name>C</name> <super><extends>extends <name>B</name></extends></super> <block>{ 
   <function><type><specifier>public</specifier> <name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ }</block></function>
   <function><type><specifier>public</specifier> <name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{ 
-    <expr_stmt><expr><call><name><name>super</name><op:operator>.</op:operator><name>Foo</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> 
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>Foo</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> 
   }</block></function>
+}</block></class>";*/
+            string xml = @"<class>class <name>B</name> <block>{
+  <function><type><specifier>public</specifier> <name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function> 
+}</block></class>
+<class>class <name>C</name> <super_list><extends>extends <super><name>B</name></super></extends></super_list> <block>{ 
+  <function><type><specifier>public</specifier> <name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
+  <function><type><specifier>public</specifier> <name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{<block_content> 
+    <expr_stmt><expr><call><name><name>super</name><operator>.</operator><name>Foo</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt> 
+  </block_content>}</block></function>
 }</block></class>";
+
             var xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
             var globalScope = codeParser.ParseFileUnit(xmlElement);
@@ -534,14 +595,23 @@ namespace ABB.SrcML.Data.Test {
             //    super(17);
             //  }
             //}
-            string xml = @"<class>class <name>B</name> <block>{
-  <constructor><specifier>public</specifier> <name>B</name><parameter_list>(<param><decl><type><name>int</name></type> <name>num</name></decl></param>)</parameter_list> <block>{ }</block></constructor>
+            /*string xml = @"<class>class <name>B</name> <block>{
+  <constructor><specifier>public</specifier> <name>B</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>num</name></decl></parameter>)</parameter_list> <block>{ }</block></constructor>
 }</block></class>
 <class>class <name>C</name> <super><extends>extends <name>B</name></extends></super> <block>{ 
   <constructor><specifier>public</specifier> <name>C</name><parameter_list>()</parameter_list> <block>{
-    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><lit:literal type=""number"">17</lit:literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><literal type=""number"">17</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
   }</block></constructor>
+}</block></class>";*/
+            string xml = @"<class>class <name>B</name> <block>{
+  <constructor><specifier>public</specifier> <name>B</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>num</name></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></constructor>
+}</block></class>
+<class>class <name>C</name> <super_list><extends>extends <super><name>B</name></super></extends></super_list> <block>{ 
+  <constructor><specifier>public</specifier> <name>C</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><literal type=""number"">17</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  </block_content>}</block></constructor>
 }</block></class>";
+
             var xmlElement = fileSetup.GetFileUnitForXmlSnippet(xml, "A.java");
 
             var globalScope = codeParser.ParseFileUnit(xmlElement);
@@ -565,9 +635,13 @@ namespace ABB.SrcML.Data.Test {
             //class C {
             //	public C() { }
             //}
-            string c_xml = @"<package>package <name>A</name>.<name>B</name>;</package>
+            /*string c_xml = @"<package>package <name>A</name>.<name>B</name>;</package>
 <class>class <name>C</name> <block>{
 	<constructor><specifier>public</specifier> <name>C</name><parameter_list>()</parameter_list> <block>{ }</block></constructor>
+}</block></class>";*/
+            string c_xml = @"<package>package <name><name>A</name><operator>.</operator><name>B</name></name>;</package>
+<class>class <name>C</name> <block>{
+	<constructor><specifier>public</specifier> <name>C</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></constructor>
 }</block></class>";
 
             //package A.D;
@@ -577,12 +651,19 @@ namespace ABB.SrcML.Data.Test {
             //		C c = new C();
             //	}
             //}
-            string e_xml = @"<package>package <name>A</name>.<name>D</name>;</package>
+            /*string e_xml = @"<package>package <name>A</name>.<name>D</name>;</package>
 <import>import <name>A</name>.<name>B</name>.*;</import>
 <class>class <name>E</name> <block>{
 	<function><type><specifier>public</specifier> <name>void</name></type> <name>main</name><parameter_list>()</parameter_list> <block>{
-		<decl_stmt><decl><type><name>C</name></type> <name>c</name> =<init> <expr><op:operator>new</op:operator> <call><name>C</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+		<decl_stmt><decl><type><name>C</name></type> <name>c</name> =<init> <expr><operator>new</operator> <call><name>C</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 	}</block></function>
+}</block></class>";*/
+            string e_xml = @"<package>package <name><name>A</name><operator>.</operator><name>D</name></name>;</package>
+<import>import <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>*</name></name>;</import>
+<class>class <name>E</name> <block>{
+	<function><type><specifier>public</specifier> <name>void</name></type> <name>main</name><parameter_list>()</parameter_list> <block>{<block_content>
+		<decl_stmt><decl><type><name>C</name></type> <name>c</name> <init>= <expr><operator>new</operator> <call><name>C</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+	</block_content>}</block></function>
 }</block></class>";
 
             var cUnit = fileSetup.GetFileUnitForXmlSnippet(c_xml, "C.java");
@@ -631,9 +712,13 @@ namespace ABB.SrcML.Data.Test {
             //public static int A;
             //public final int B;
             //private static final Foo C;
+            /*string testXml = @"<decl_stmt><decl><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>A</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>public</specifier> <specifier>final</specifier> <name>int</name></type> <name>B</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>private</specifier> <specifier>static</specifier> <specifier>final</specifier> <name>Foo</name></type> <name>C</name></decl>;</decl_stmt>";*/
             string testXml = @"<decl_stmt><decl><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>A</name></decl>;</decl_stmt>
 <decl_stmt><decl><type><specifier>public</specifier> <specifier>final</specifier> <name>int</name></type> <name>B</name></decl>;</decl_stmt>
 <decl_stmt><decl><type><specifier>private</specifier> <specifier>static</specifier> <specifier>final</specifier> <name>Foo</name></type> <name>C</name></decl>;</decl_stmt>";
+
             var testUnit = fileSetup.GetFileUnitForXmlSnippet(testXml, "test.java");
 
             var globalScope = codeParser.ParseFileUnit(testUnit);
@@ -666,21 +751,32 @@ namespace ABB.SrcML.Data.Test {
             //public class Robot {
             //  public Baz GetThingy() { return new Baz(); }
             //}
-            string xmlA = @"<import pos:line=""1"" pos:column=""1"">import <name><name pos:line=""1"" pos:column=""8"">Foo</name><op:operator pos:line=""1"" pos:column=""11"">.</op:operator><name pos:line=""1"" pos:column=""12"">Bar</name></name>.*;</import>
+            /*string xmlA = @"<import pos:line=""1"" pos:column=""1"">import <name><name pos:line=""1"" pos:column=""8"">Foo</name><operator pos:line=""1"" pos:column=""11"">.</operator><name pos:line=""1"" pos:column=""12"">Bar</name></name>.*;</import>
 <package pos:line=""2"" pos:column=""1"">package <name pos:line=""2"" pos:column=""9"">A</name>;</package>
 <class><specifier pos:line=""3"" pos:column=""1"">public</specifier> class <name pos:line=""3"" pos:column=""14"">Robot</name> <block pos:line=""3"" pos:column=""20"">{
-  <function><type><specifier pos:line=""4"" pos:column=""3"">public</specifier> <name pos:line=""4"" pos:column=""10"">Baz</name></type> <name pos:line=""4"" pos:column=""14"">GetThingy</name><parameter_list pos:line=""4"" pos:column=""23"">()</parameter_list> <block pos:line=""4"" pos:column=""26"">{ <return pos:line=""4"" pos:column=""28"">return <expr><op:operator pos:line=""4"" pos:column=""35"">new</op:operator> <call><name pos:line=""4"" pos:column=""39"">Baz</name><argument_list pos:line=""4"" pos:column=""42"">()</argument_list></call></expr>;</return> }</block></function>
+  <function><type><specifier pos:line=""4"" pos:column=""3"">public</specifier> <name pos:line=""4"" pos:column=""10"">Baz</name></type> <name pos:line=""4"" pos:column=""14"">GetThingy</name><parameter_list pos:line=""4"" pos:column=""23"">()</parameter_list> <block pos:line=""4"" pos:column=""26"">{ <return pos:line=""4"" pos:column=""28"">return <expr><operator pos:line=""4"" pos:column=""35"">new</operator> <call><name pos:line=""4"" pos:column=""39"">Baz</name><argument_list pos:line=""4"" pos:column=""42"">()</argument_list></call></expr>;</return> }</block></function>
+}</block></class>";*/
+            string xmlA = @"<import pos:start=""1:1"" pos:end=""1:17"">import <name pos:start=""1:8"" pos:end=""1:16""><name pos:start=""1:8"" pos:end=""1:10"">Foo</name><operator pos:start=""1:11"" pos:end=""1:11"">.</operator><name pos:start=""1:12"" pos:end=""1:14"">Bar</name><operator pos:start=""1:15"" pos:end=""1:15"">.</operator><name pos:start=""1:16"" pos:end=""1:16"">*</name></name>;</import>
+<package pos:start=""2:1"" pos:end=""2:10"">package <name pos:start=""2:9"" pos:end=""2:9"">A</name>;</package>
+<class pos:start=""3:1"" pos:end=""5:1""><specifier pos:start=""3:1"" pos:end=""3:6"">public</specifier> class <name pos:start=""3:14"" pos:end=""3:18"">Robot</name> <block pos:start=""3:20"" pos:end=""5:1"">{
+  <function pos:start=""4:3"" pos:end=""4:46""><type pos:start=""4:3"" pos:end=""4:12""><specifier pos:start=""4:3"" pos:end=""4:8"">public</specifier> <name pos:start=""4:10"" pos:end=""4:12"">Baz</name></type> <name pos:start=""4:14"" pos:end=""4:22"">GetThingy</name><parameter_list pos:start=""4:23"" pos:end=""4:24"">()</parameter_list> <block pos:start=""4:26"" pos:end=""4:46"">{<block_content pos:start=""4:28"" pos:end=""4:44""> <return pos:start=""4:28"" pos:end=""4:44"">return <expr pos:start=""4:35"" pos:end=""4:43""><operator pos:start=""4:35"" pos:end=""4:37"">new</operator> <call pos:start=""4:39"" pos:end=""4:43""><name pos:start=""4:39"" pos:end=""4:41"">Baz</name><argument_list pos:start=""4:42"" pos:end=""4:43"">()</argument_list></call></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             XElement xmlElementA = fileSetup.GetFileUnitForXmlSnippet(xmlA, "A.java");
             //B.java
             //package Foo.Bar;
             //public class Baz {
             //  public Baz() { }
             //}
-            string xmlB = @"<package pos:line=""1"" pos:column=""1"">package <name><name pos:line=""1"" pos:column=""9"">Foo</name><op:operator pos:line=""1"" pos:column=""12"">.</op:operator><name pos:line=""1"" pos:column=""13"">Bar</name></name>;</package>
+            /*string xmlB = @"<package pos:line=""1"" pos:column=""1"">package <name><name pos:line=""1"" pos:column=""9"">Foo</name><operator pos:line=""1"" pos:column=""12"">.</operator><name pos:line=""1"" pos:column=""13"">Bar</name></name>;</package>
 <class><specifier pos:line=""2"" pos:column=""1"">public</specifier> class <name pos:line=""2"" pos:column=""14"">Baz</name> <block pos:line=""2"" pos:column=""18"">{
   <constructor><specifier pos:line=""3"" pos:column=""3"">public</specifier> <name pos:line=""3"" pos:column=""10"">Baz</name><parameter_list pos:line=""3"" pos:column=""13"">()</parameter_list> <block pos:line=""3"" pos:column=""16"">{ }</block></constructor>
+}</block></class>";*/
+            string xmlB = @"<package pos:start=""1:1"" pos:end=""1:16"">package <name pos:start=""1:9"" pos:end=""1:15""><name pos:start=""1:9"" pos:end=""1:11"">Foo</name><operator pos:start=""1:12"" pos:end=""1:12"">.</operator><name pos:start=""1:13"" pos:end=""1:15"">Bar</name></name>;</package>
+<class pos:start=""2:1"" pos:end=""4:1""><specifier pos:start=""2:1"" pos:end=""2:6"">public</specifier> class <name pos:start=""2:14"" pos:end=""2:16"">Baz</name> <block pos:start=""2:18"" pos:end=""4:1"">{
+  <constructor pos:start=""3:3"" pos:end=""3:18""><specifier pos:start=""3:3"" pos:end=""3:8"">public</specifier> <name pos:start=""3:10"" pos:end=""3:12"">Baz</name><parameter_list pos:start=""3:13"" pos:end=""3:14"">()</parameter_list> <block pos:start=""3:16"" pos:end=""3:18"">{<block_content> </block_content>}</block></constructor>
 }</block></class>";
+
             XElement xmlElementB = fileSetup.GetFileUnitForXmlSnippet(xmlB, "B.java");
             
             var scopeA = codeParser.ParseFileUnit(xmlElementA);
@@ -710,10 +806,15 @@ namespace ABB.SrcML.Data.Test {
             //public class Baz {
             //  public static void DoTheThing() { };
             //}
-            string xmlA = @"<package pos:line=""1"" pos:column=""1"">package <name><name pos:line=""1"" pos:column=""9"">Foo</name><op:operator pos:line=""1"" pos:column=""12"">.</op:operator><name pos:line=""1"" pos:column=""13"">Bar</name></name>;</package>
+            /*string xmlA = @"<package pos:line=""1"" pos:column=""1"">package <name><name pos:line=""1"" pos:column=""9"">Foo</name><operator pos:line=""1"" pos:column=""12"">.</operator><name pos:line=""1"" pos:column=""13"">Bar</name></name>;</package>
 <class><specifier pos:line=""2"" pos:column=""1"">public</specifier> class <name pos:line=""2"" pos:column=""14"">Baz</name> <block pos:line=""2"" pos:column=""18"">{
   <function><type><specifier pos:line=""3"" pos:column=""3"">public</specifier> <specifier pos:line=""3"" pos:column=""10"">static</specifier> <name pos:line=""3"" pos:column=""17"">void</name></type> <name pos:line=""3"" pos:column=""22"">DoTheThing</name><parameter_list pos:line=""3"" pos:column=""32"">()</parameter_list> <block pos:line=""3"" pos:column=""35"">{ }</block></function><empty_stmt pos:line=""3"" pos:column=""38"">;</empty_stmt>
+}</block></class>";*/
+            string xmlA = @"<package pos:start=""1:1"" pos:end=""1:16"">package <name pos:start=""1:9"" pos:end=""1:15""><name pos:start=""1:9"" pos:end=""1:11"">Foo</name><operator pos:start=""1:12"" pos:end=""1:12"">.</operator><name pos:start=""1:13"" pos:end=""1:15"">Bar</name></name>;</package>
+<class pos:start=""2:1"" pos:end=""4:1""><specifier pos:start=""2:1"" pos:end=""2:6"">public</specifier> class <name pos:start=""2:14"" pos:end=""2:16"">Baz</name> <block pos:start=""2:18"" pos:end=""4:1"">{
+  <function pos:start=""3:3"" pos:end=""3:37""><type pos:start=""3:3"" pos:end=""3:20""><specifier pos:start=""3:3"" pos:end=""3:8"">public</specifier> <specifier pos:start=""3:10"" pos:end=""3:15"">static</specifier> <name pos:start=""3:17"" pos:end=""3:20"">void</name></type> <name pos:start=""3:22"" pos:end=""3:31"">DoTheThing</name><parameter_list pos:start=""3:32"" pos:end=""3:33"">()</parameter_list> <block pos:start=""3:35"" pos:end=""3:37"">{<block_content> </block_content>}</block></function><empty_stmt pos:start=""3:38"" pos:end=""3:38"">;</empty_stmt>
 }</block></class>";
+
             XElement xmlElementA = fileSetup.GetFileUnitForXmlSnippet(xmlA, "A.java");
             //B.java
             //import Foo.Bar.Baz;
@@ -723,13 +824,21 @@ namespace ABB.SrcML.Data.Test {
             //    Baz.DoTheThing();
             //  }
             //}
-            string xmlB = @"<import pos:line=""1"" pos:column=""1"">import <name><name pos:line=""1"" pos:column=""8"">Foo</name><op:operator pos:line=""1"" pos:column=""11"">.</op:operator><name pos:line=""1"" pos:column=""12"">Bar</name><op:operator pos:line=""1"" pos:column=""15"">.</op:operator><name pos:line=""1"" pos:column=""16"">Baz</name></name>;</import>
+            /*string xmlB = @"<import pos:line=""1"" pos:column=""1"">import <name><name pos:line=""1"" pos:column=""8"">Foo</name><operator pos:line=""1"" pos:column=""11"">.</operator><name pos:line=""1"" pos:column=""12"">Bar</name><operator pos:line=""1"" pos:column=""15"">.</operator><name pos:line=""1"" pos:column=""16"">Baz</name></name>;</import>
 <package pos:line=""2"" pos:column=""1"">package <name pos:line=""2"" pos:column=""9"">A</name>;</package>
 <class><specifier pos:line=""3"" pos:column=""1"">public</specifier> class <name pos:line=""3"" pos:column=""14"">B</name> <block pos:line=""3"" pos:column=""16"">{
   <constructor><specifier pos:line=""4"" pos:column=""3"">public</specifier> <name pos:line=""4"" pos:column=""10"">B</name><parameter_list pos:line=""4"" pos:column=""11"">()</parameter_list> <block pos:line=""4"" pos:column=""14"">{
-    <expr_stmt><expr><call><name><name pos:line=""5"" pos:column=""5"">Baz</name><op:operator pos:line=""5"" pos:column=""8"">.</op:operator><name pos:line=""5"" pos:column=""9"">DoTheThing</name></name><argument_list pos:line=""5"" pos:column=""19"">()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name><name pos:line=""5"" pos:column=""5"">Baz</name><operator pos:line=""5"" pos:column=""8"">.</operator><name pos:line=""5"" pos:column=""9"">DoTheThing</name></name><argument_list pos:line=""5"" pos:column=""19"">()</argument_list></call></expr>;</expr_stmt>
   }</block></constructor>
+}</block></class>";*/
+            string xmlB = @"<import pos:start=""1:1"" pos:end=""1:19"">import <name pos:start=""1:8"" pos:end=""1:18""><name pos:start=""1:8"" pos:end=""1:10"">Foo</name><operator pos:start=""1:11"" pos:end=""1:11"">.</operator><name pos:start=""1:12"" pos:end=""1:14"">Bar</name><operator pos:start=""1:15"" pos:end=""1:15"">.</operator><name pos:start=""1:16"" pos:end=""1:18"">Baz</name></name>;</import>
+<package pos:start=""2:1"" pos:end=""2:10"">package <name pos:start=""2:9"" pos:end=""2:9"">A</name>;</package>
+<class pos:start=""3:1"" pos:end=""7:1""><specifier pos:start=""3:1"" pos:end=""3:6"">public</specifier> class <name pos:start=""3:14"" pos:end=""3:14"">B</name> <block pos:start=""3:16"" pos:end=""7:1"">{
+  <constructor pos:start=""4:3"" pos:end=""6:3""><specifier pos:start=""4:3"" pos:end=""4:8"">public</specifier> <name pos:start=""4:10"" pos:end=""4:10"">B</name><parameter_list pos:start=""4:11"" pos:end=""4:12"">()</parameter_list> <block pos:start=""4:14"" pos:end=""6:3"">{<block_content pos:start=""5:5"" pos:end=""5:21"">
+    <expr_stmt pos:start=""5:5"" pos:end=""5:21""><expr pos:start=""5:5"" pos:end=""5:20""><call pos:start=""5:5"" pos:end=""5:20""><name pos:start=""5:5"" pos:end=""5:18""><name pos:start=""5:5"" pos:end=""5:7"">Baz</name><operator pos:start=""5:8"" pos:end=""5:8"">.</operator><name pos:start=""5:9"" pos:end=""5:18"">DoTheThing</name></name><argument_list pos:start=""5:19"" pos:end=""5:20"">()</argument_list></call></expr>;</expr_stmt>
+  </block_content>}</block></constructor>
 }</block></class>";
+
             XElement xmlElementB = fileSetup.GetFileUnitForXmlSnippet(xmlB, "B.java");
             
             var scopeA = codeParser.ParseFileUnit(xmlElementA);
@@ -752,16 +861,20 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void BasicParentTest_Java() {
             // # A.java class A implements B { }
-            string a_xml = @"<class>class <name>A</name> <super><implements>implements <name>B</name></implements></super> <block>{
-}</block></class>";
+            /*string a_xml = @"<class>class <name>A</name> <super><implements>implements <name>B</name></implements></super> <block>{
+}</block></class>";*/
+            string a_xml = @"<class>class <name>A</name> <super_list><implements>implements <super><name>B</name></super></implements></super_list> <block>{ }</block></class>";
+
             // # B.java class B { }
-            string b_xml = @"<class>class <name>B</name> <block>{
-}</block></class>";
+            /*string b_xml = @"<class>class <name>B</name> <block>{
+}</block></class>";*/
+            string b_xml = @"<class>class <name>B</name> <block>{ }</block></class>";
 
             // # C.java class C { A a; }
-            string c_xml = @"<class>class <name>C</name> <block>{
+            /*string c_xml = @"<class>class <name>C</name> <block>{
 	<decl_stmt><decl><type><name>A</name></type> <name>a</name></decl>;</decl_stmt>
-}</block></class>";
+}</block></class>";*/
+            string c_xml = @"<class>class <name>C</name> <block>{ <decl_stmt><decl><type><name>A</name></type> <name>a</name></decl>;</decl_stmt> }</block></class>";
 
             var fileUnitA = fileSetup.GetFileUnitForXmlSnippet(a_xml, "A.java");
             var fileUnitB = fileSetup.GetFileUnitForXmlSnippet(b_xml, "B.java");
@@ -795,9 +908,13 @@ namespace ABB.SrcML.Data.Test {
             //class C {
             //    int Foo();
             //}
-            string c_xml = @"<package pos:line=""1"" pos:column=""1"">package <name><name pos:line=""1"" pos:column=""9"">A</name><op:operator pos:line=""1"" pos:column=""10"">.</op:operator><name pos:line=""1"" pos:column=""11"">B</name></name>;</package>
+            /*string c_xml = @"<package pos:line=""1"" pos:column=""1"">package <name><name pos:line=""1"" pos:column=""9"">A</name><operator pos:line=""1"" pos:column=""10"">.</operator><name pos:line=""1"" pos:column=""11"">B</name></name>;</package>
 <class pos:line=""2"" pos:column=""1"">class <name pos:line=""2"" pos:column=""7"">C</name> <block pos:line=""2"" pos:column=""9"">{
     <function_decl><type><name pos:line=""3"" pos:column=""5"">int</name></type> <name pos:line=""3"" pos:column=""9"">Foo</name><parameter_list pos:line=""3"" pos:column=""12"">()</parameter_list>;</function_decl>
+}</block></class>";*/
+            string c_xml = @"<package pos:start=""1:1"" pos:end=""1:12"">package <name pos:start=""1:9"" pos:end=""1:11""><name pos:start=""1:9"" pos:end=""1:9"">A</name><operator pos:start=""1:10"" pos:end=""1:10"">.</operator><name pos:start=""1:11"" pos:end=""1:11"">B</name></name>;</package>
+<class pos:start=""2:1"" pos:end=""4:1"">class <name pos:start=""2:7"" pos:end=""2:7"">C</name> <block pos:start=""2:9"" pos:end=""4:1"">{
+    <function_decl pos:start=""3:5"" pos:end=""3:14""><type pos:start=""3:5"" pos:end=""3:7""><name pos:start=""3:5"" pos:end=""3:7"">int</name></type> <name pos:start=""3:9"" pos:end=""3:11"">Foo</name><parameter_list pos:start=""3:12"" pos:end=""3:13"">()</parameter_list>;</function_decl>
 }</block></class>";
 
             //package D;
@@ -808,13 +925,21 @@ namespace ABB.SrcML.Data.Test {
             //        c.Foo();
             //    }
             //}
-            string e_xml = @"<package pos:line=""1"" pos:column=""1"">package <name pos:line=""1"" pos:column=""9"">D</name>;</package>
-<import pos:line=""2"" pos:column=""1"">import <name><name pos:line=""2"" pos:column=""8"">A</name><op:operator pos:line=""2"" pos:column=""9"">.</op:operator><name pos:line=""2"" pos:column=""10"">B</name></name>.*;</import>
+            /*string e_xml = @"<package pos:line=""1"" pos:column=""1"">package <name pos:line=""1"" pos:column=""9"">D</name>;</package>
+<import pos:line=""2"" pos:column=""1"">import <name><name pos:line=""2"" pos:column=""8"">A</name><operator pos:line=""2"" pos:column=""9"">.</operator><name pos:line=""2"" pos:column=""10"">B</name></name>.*;</import>
 <class pos:line=""3"" pos:column=""1"">class <name pos:line=""3"" pos:column=""7"">E</name> <block pos:line=""3"" pos:column=""9"">{
     <function><type><specifier pos:line=""4"" pos:column=""5"">public</specifier> <specifier pos:line=""4"" pos:column=""12"">static</specifier> <name pos:line=""4"" pos:column=""19"">void</name></type> <name pos:line=""4"" pos:column=""24"">main</name><parameter_list pos:line=""4"" pos:column=""28"">()</parameter_list> <block pos:line=""4"" pos:column=""31"">{
-        <decl_stmt><decl><type><name pos:line=""5"" pos:column=""9"">C</name></type> <name pos:line=""5"" pos:column=""11"">c</name> <init pos:line=""5"" pos:column=""13"">= <expr><op:operator pos:line=""5"" pos:column=""15"">new</op:operator> <call><name pos:line=""5"" pos:column=""19"">C</name><argument_list pos:line=""5"" pos:column=""20"">()</argument_list></call></expr></init></decl>;</decl_stmt>
-        <expr_stmt><expr><call><name><name pos:line=""6"" pos:column=""9"">c</name><op:operator pos:line=""6"" pos:column=""10"">.</op:operator><name pos:line=""6"" pos:column=""11"">Foo</name></name><argument_list pos:line=""6"" pos:column=""14"">()</argument_list></call></expr>;</expr_stmt>
+        <decl_stmt><decl><type><name pos:line=""5"" pos:column=""9"">C</name></type> <name pos:line=""5"" pos:column=""11"">c</name> <init pos:line=""5"" pos:column=""13"">= <expr><operator pos:line=""5"" pos:column=""15"">new</operator> <call><name pos:line=""5"" pos:column=""19"">C</name><argument_list pos:line=""5"" pos:column=""20"">()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name><name pos:line=""6"" pos:column=""9"">c</name><operator pos:line=""6"" pos:column=""10"">.</operator><name pos:line=""6"" pos:column=""11"">Foo</name></name><argument_list pos:line=""6"" pos:column=""14"">()</argument_list></call></expr>;</expr_stmt>
     }</block></function>
+}</block></class>";*/
+            string e_xml = @"<package pos:start=""1:1"" pos:end=""1:10"">package <name pos:start=""1:9"" pos:end=""1:9"">D</name>;</package>
+<import pos:start=""2:1"" pos:end=""2:13"">import <name pos:start=""2:8"" pos:end=""2:12""><name pos:start=""2:8"" pos:end=""2:8"">A</name><operator pos:start=""2:9"" pos:end=""2:9"">.</operator><name pos:start=""2:10"" pos:end=""2:10"">B</name><operator pos:start=""2:11"" pos:end=""2:11"">.</operator><name pos:start=""2:12"" pos:end=""2:12"">*</name></name>;</import>
+<class pos:start=""3:1"" pos:end=""8:1"">class <name pos:start=""3:7"" pos:end=""3:7"">E</name> <block pos:start=""3:9"" pos:end=""8:1"">{
+    <function pos:start=""4:5"" pos:end=""7:5""><type pos:start=""4:5"" pos:end=""4:22""><specifier pos:start=""4:5"" pos:end=""4:10"">public</specifier> <specifier pos:start=""4:12"" pos:end=""4:17"">static</specifier> <name pos:start=""4:19"" pos:end=""4:22"">void</name></type> <name pos:start=""4:24"" pos:end=""4:27"">main</name><parameter_list pos:start=""4:28"" pos:end=""4:29"">()</parameter_list> <block pos:start=""4:31"" pos:end=""7:5"">{<block_content pos:start=""5:9"" pos:end=""6:16"">
+        <decl_stmt pos:start=""5:9"" pos:end=""5:22""><decl pos:start=""5:9"" pos:end=""5:21""><type pos:start=""5:9"" pos:end=""5:9""><name pos:start=""5:9"" pos:end=""5:9"">C</name></type> <name pos:start=""5:11"" pos:end=""5:11"">c</name> <init pos:start=""5:13"" pos:end=""5:21"">= <expr pos:start=""5:15"" pos:end=""5:21""><operator pos:start=""5:15"" pos:end=""5:17"">new</operator> <call pos:start=""5:19"" pos:end=""5:21""><name pos:start=""5:19"" pos:end=""5:19"">C</name><argument_list pos:start=""5:20"" pos:end=""5:21"">()</argument_list></call></expr></init></decl>;</decl_stmt>
+        <expr_stmt pos:start=""6:9"" pos:end=""6:16""><expr pos:start=""6:9"" pos:end=""6:15""><call pos:start=""6:9"" pos:end=""6:15""><name pos:start=""6:9"" pos:end=""6:13""><name pos:start=""6:9"" pos:end=""6:9"">c</name><operator pos:start=""6:10"" pos:end=""6:10"">.</operator><name pos:start=""6:11"" pos:end=""6:13"">Foo</name></name><argument_list pos:start=""6:14"" pos:end=""6:15"">()</argument_list></call></expr>;</expr_stmt>
+    </block_content>}</block></function>
 }</block></class>";
 
             var cUnit = fileSetup.GetFileUnitForXmlSnippet(c_xml, "C.java");

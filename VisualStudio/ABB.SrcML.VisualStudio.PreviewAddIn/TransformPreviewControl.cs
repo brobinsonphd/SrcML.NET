@@ -713,6 +713,51 @@ namespace ABB.SrcML.VisualStudio.PreviewAddIn
                                        
             messageLabel.Text = String.Format("Selected {0} results ({1})", dataGridView1.RowCount, label);
         }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void outputFolderComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void statusBar_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void messageLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void progressLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void progressBar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void saveTransformDialog_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void projectFolderDialog_HelpRequest(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class SrcMLFileCreatedEventArgs : EventArgs

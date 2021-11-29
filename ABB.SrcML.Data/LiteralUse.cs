@@ -45,8 +45,8 @@ namespace ABB.SrcML.Data {
         public static LiteralKind GetLiteralKind(XElement literalElement) {
             if(literalElement == null)
                 throw new ArgumentNullException("literalElement");
-            if(literalElement.Name != LIT.Literal)
-                throw new ArgumentException("should be of type LIT.Literal", "literalElement");
+            if(literalElement.Name != SRC.Literal)
+                throw new ArgumentException("should be of type SRC.Literal", "literalElement");
 
             var typeAttribute = literalElement.Attribute("type");
             if(null == typeAttribute)

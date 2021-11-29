@@ -26,7 +26,7 @@ namespace ABB.SrcML.Data {
         /// </summary>
         public CSharpCodeParser()
             : base() {
-            this.TypeElementNames = new HashSet<XName> { SRC.Class, SRC.Enum, SRC.Struct }; //SRC.Interface?
+            this.TypeElementNames = new HashSet<XName> { SRC.Class, SRC.Enum, SRC.Struct, SRC.Interface }; 
             this.AliasElementName = SRC.Using;
             //TODO: what else needs to be set here?
         }
@@ -67,13 +67,23 @@ namespace ABB.SrcML.Data {
         /// </summary>
         /// <param name="typeElement">The type element to parse</param>
         /// <returns>The type use elements</returns>
-        protected override IEnumerable<XElement> GetParentTypeUseElements(XElement typeElement) {
-            var superElement = typeElement.Element(SRC.Super);
-            if(superElement != null) {
-                return superElement.Elements(SRC.Name);
+        protected override IEnumerable<XElement> GetParentTypeUseElements(XElement typeElement) {          
+            var superElement = typeElement.Element(SRC.SuperList);
+
+            if (superElement != null)
+            {
+                return superElement.Elements(SRC.Super).Elements(SRC.Name);
             }
-            return Enumerable.Empty<XElement>();
-        }
+            else
+            {
+                superElement = typeElement.Element(SRC.Super);
+                if (null != superElement)
+                {
+                    return superElement.Elements(SRC.Name);
+                }
+            }
+            return Enumerable.Empty<XElement>();        
+    }
 
         /// <summary>
         /// Parses a C# boolean literal
@@ -160,7 +170,7 @@ namespace ABB.SrcML.Data {
 
             var nameElement = namespaceElement.Element(SRC.Name);
             if(nameElement == null) {
-                throw new ParseException(context.FileName, namespaceElement.GetSrcLineNumber(), namespaceElement.GetSrcLinePosition(), this,
+                throw new ParseException(context.FileName, namespaceElement.GetSrcStartLineNumber(), namespaceElement.GetSrcStartLinePosition(), this,
                                          "No SRC.Name element found in namespace.", null);
             }
 
@@ -310,19 +320,15 @@ namespace ABB.SrcML.Data {
         protected override Statement ParseDeclarationStatementElement(XElement stmtElement, ParserContext context) {
             if(stmtElement == null)
                 throw new ArgumentNullException("stmtElement");
-            if(stmtElement.Name != SRC.DeclarationStatement)
+            if( (stmtElement.Name != SRC.DeclarationStatement) && (stmtElement.Name != SRC.Property ) )
                 throw new ArgumentException("Must be a SRC.DeclarationStatement element", "stmtElement");
             if(context == null)
                 throw new ArgumentNullException("context");
             
-            //first check if this is a property and parse accordingly
-            var declElement = stmtElement.Element(SRC.Declaration);
-            if(declElement != null) {
-                var blockElement = declElement.Element(SRC.Block);
-                if(blockElement != null) {
-                    //this is a property
-                    return ParsePropertyDeclarationElement(declElement, context);
-                }
+            //first check if this is a property and parse accordingly            
+            if(stmtElement.Name == SRC.Property) 
+            {
+                return ParsePropertyDeclarationElement(stmtElement, context);                
             }
 
             //otherwise, parse as base:
@@ -338,7 +344,7 @@ namespace ABB.SrcML.Data {
         protected virtual PropertyDefinition ParsePropertyDeclarationElement(XElement declElement, ParserContext context) {
             if(declElement == null)
                 throw new ArgumentNullException("declElement");
-            if(declElement.Name != SRC.Declaration)
+            if(declElement.Name != SRC.Property)
                 throw new ArgumentException("Must be a SRC.Declaration element", "declElement");
             if(context == null)
                 throw new ArgumentNullException("context");

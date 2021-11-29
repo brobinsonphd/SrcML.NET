@@ -28,7 +28,7 @@ namespace ABB.SrcML {
         /// <summary>
         /// The src2srcml executable name
         /// </summary>
-        public const string Src2SrcMLExecutableName = "src2srcml.exe";
+        public const string Src2SrcMLExecutableName = "srcml.exe";
 
         #region Constructors
 
@@ -43,7 +43,7 @@ namespace ABB.SrcML {
         /// </summary>
         /// <param name="applicationDirectory">The application directory.</param>
         public Src2SrcMLRunner(string applicationDirectory)
-            : this(applicationDirectory, new[] {LIT.ArgumentLabel, OP.ArgumentLabel, TYPE.ArgumentLabel, POS.ArgumentLabel}) {}
+            : this(applicationDirectory, new[] {""}) {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Src2SrcMLRunner"/> class.
@@ -250,9 +250,13 @@ namespace ABB.SrcML {
                 throw new SrcMLException("Any is not a valid language. Pick an actual language in the enumeration");
             }
 
+            string sourceWithQuotes;     
+
             Collection<string> arguments = new Collection<string>(this.NamespaceArguments);
             arguments.Add("--no-xml-declaration");
-            arguments.Add(String.Format(CultureInfo.InvariantCulture, "--language={0}", KsuAdapter.GetLanguage(language)));
+            arguments.Add(String.Format(CultureInfo.InvariantCulture, "--language={0}", KsuAdapter.GetLanguage(language)));                      
+            sourceWithQuotes = "--text=" + "\"" + source + "\""; 
+            arguments.Add(sourceWithQuotes);          
 
             var xml = Run(arguments, source);
             return xml;

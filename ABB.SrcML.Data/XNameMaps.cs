@@ -41,16 +41,12 @@ namespace ABB.SrcML.Data {
                 { SRC.Union, TypeKind.Union },
                 { SRC.UnionDeclaration, TypeKind.Union },
                 { SRC.Enum, TypeKind.Enumeration },
+                { SRC.Interface, TypeKind.Interface }
             };
 
             TypeKind answer;
-            if(map.TryGetValue(typeElement.Name, out answer)) {
-                if(TypeKind.Class == answer) {
-                    var typeAttribute = typeElement.Attribute("type");
-                    if(null != typeAttribute && typeAttribute.Value == "interface") {
-                        return TypeKind.Interface;
-                    }
-                }
+            if(map.TryGetValue(typeElement.Name, out answer)) 
+            {                
                 return answer;
             }
             throw new ArgumentException("element must be of type struct, struct_decl, class, class_decl, union, union_decl, or enum", "typeElement");

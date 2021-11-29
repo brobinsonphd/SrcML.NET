@@ -10,7 +10,7 @@ using ABB.SrcML.VisualStudio.SrcMLService;
 // New added references
 using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
+//using Microsoft.VSSDK.Tools.VsIdeTesting;
 
 namespace ABB.SrcML.VisualStudio.SrcMLService.UnitTests {
     [TestClass()]

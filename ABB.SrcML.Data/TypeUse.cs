@@ -138,9 +138,20 @@ namespace ABB.SrcML.Data {
 
             //search enclosing scopes and base types
             foreach(var scope in ParentStatement.GetAncestors<NamedScope>()) {
-                var matches = scope.GetNamedChildren<TypeDefinition>(this).Where(SignatureMatches).ToList();
-                if(matches.Any()) {
-                    return matches;
+                if (scope.GetXmlName().Equals(SRC.Namespace.LocalName, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var matches = scope.GetDescendants<TypeDefinition>().Where(SignatureMatches).ToList();
+                    if (matches.Any())
+                    {
+                        return matches;
+                    }
+                }
+                else 
+                {
+                    var matches = scope.GetNamedChildren<TypeDefinition>(this).Where(SignatureMatches).ToList();
+                    if (matches.Any()) {
+                        return matches;
+                    }
                 }
                 var typeDef = scope as TypeDefinition;
                 if(typeDef != null) {

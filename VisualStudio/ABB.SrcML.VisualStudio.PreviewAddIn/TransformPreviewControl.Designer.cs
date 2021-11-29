@@ -102,6 +102,7 @@ namespace ABB.SrcML.VisualStudio.PreviewAddIn
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 300);
             this.tableLayoutPanel1.TabIndex = 0;
+            this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
             // outputFolderComboBox
             // 
@@ -113,6 +114,7 @@ namespace ABB.SrcML.VisualStudio.PreviewAddIn
             this.outputFolderComboBox.Size = new System.Drawing.Size(711, 21);
             this.outputFolderComboBox.TabIndex = 4;
             this.outputFolderComboBox.Text = "Select an output directory";
+            this.outputFolderComboBox.SelectedIndexChanged += new System.EventHandler(this.outputFolderComboBox_SelectedIndexChanged);
             this.outputFolderComboBox.DataSourceChanged += new System.EventHandler(this.updateSelectedTransform);
             // 
             // dataGridView1
@@ -133,6 +135,7 @@ namespace ABB.SrcML.VisualStudio.PreviewAddIn
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(604, 187);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
@@ -268,6 +271,7 @@ namespace ABB.SrcML.VisualStudio.PreviewAddIn
             this.statusBar.Size = new System.Drawing.Size(800, 23);
             this.statusBar.TabIndex = 6;
             this.statusBar.Text = "statusStrip1";
+            this.statusBar.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusBar_ItemClicked);
             // 
             // messageLabel
             // 
@@ -276,18 +280,21 @@ namespace ABB.SrcML.VisualStudio.PreviewAddIn
             this.messageLabel.Name = "messageLabel";
             this.messageLabel.Size = new System.Drawing.Size(0, 18);
             this.messageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.messageLabel.Click += new System.EventHandler(this.messageLabel_Click);
             // 
             // progressLabel
             // 
             this.progressLabel.BackColor = System.Drawing.Color.Transparent;
             this.progressLabel.Name = "progressLabel";
             this.progressLabel.Size = new System.Drawing.Size(0, 18);
+            this.progressLabel.Click += new System.EventHandler(this.progressLabel_Click);
             // 
             // progressBar
             // 
             this.progressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(100, 17);
+            this.progressBar.Click += new System.EventHandler(this.progressBar_Click);
             // 
             // categoryTreeView
             // 
@@ -305,6 +312,11 @@ namespace ABB.SrcML.VisualStudio.PreviewAddIn
             // 
             this.saveTransformDialog.DefaultExt = "xml";
             this.saveTransformDialog.Filter = "XML Files (*.xml)|xml";
+            this.saveTransformDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveTransformDialog_FileOk);
+            // 
+            // projectFolderDialog
+            // 
+            this.projectFolderDialog.HelpRequest += new System.EventHandler(this.projectFolderDialog_HelpRequest);
             // 
             // srcmlGenWorker
             // 

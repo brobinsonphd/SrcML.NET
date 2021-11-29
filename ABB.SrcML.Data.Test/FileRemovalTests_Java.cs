@@ -27,20 +27,30 @@ namespace ABB.SrcML.Data.Test {
             //    public Foo() { bar = 42; }
             //    public int GetBar() { return bar; }
             //}
+            /*string fooXml = @"<class>class <name>Foo</name> <block>{
+    <decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
+    <constructor><specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>bar</name> <operator>=</operator> <literal type=""number"">42</literal></expr>;</expr_stmt> }</block></constructor>
+    <function><type><specifier>public</specifier> <name>int</name></type> <name>GetBar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>bar</name></expr>;</return> }</block></function>
+}</block></class>";*/
             string fooXml = @"<class>class <name>Foo</name> <block>{
     <decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
-    <constructor><specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>bar</name> <op:operator>=</op:operator> <lit:literal type=""number"">42</lit:literal></expr>;</expr_stmt> }</block></constructor>
-    <function><type><specifier>public</specifier> <name>int</name></type> <name>GetBar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>bar</name></expr>;</return> }</block></function>
+    <constructor><specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><name>bar</name> <operator>=</operator> <literal type=""number"">42</literal></expr>;</expr_stmt> </block_content>}</block></constructor>
+    <function><type><specifier>public</specifier> <name>int</name></type> <name>GetBar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>bar</name></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             var fooFileUnit = FileUnitSetup.GetFileUnitForXmlSnippet(fooXml, "Foo.java");
             var beforeScope = CodeParser.ParseFileUnit(fooFileUnit);
             ////Baz.java
             //class Baz {
             //    public static int DoWork() { return 0; }
             //}
+            /*string bazXml = @"<class>class <name>Baz</name> <block>{
+    <function><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>DoWork</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=""number"">0</literal></expr>;</return> }</block></function>
+}</block></class>";*/
             string bazXml = @"<class>class <name>Baz</name> <block>{
-    <function><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>DoWork</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return> }</block></function>
+    <function><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>DoWork</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             var bazFileUnit = FileUnitSetup.GetFileUnitForXmlSnippet(bazXml, "Baz.java");
             var afterScope = beforeScope.Merge(CodeParser.ParseFileUnit(bazFileUnit));
 
@@ -61,12 +71,19 @@ namespace ABB.SrcML.Data.Test {
             //    public Foo() { bar = 42; }
             //    public int GetBar() { return bar; }
             //}
-            string fooXml = @"<package>package <name>com</name>.<name>ABB</name>.<name>Example</name>;</package>
+            /*string fooXml = @"<package>package <name>com</name>.<name>ABB</name>.<name>Example</name>;</package>
 <class>class <name>Foo</name> <block>{
     <decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
-    <constructor><specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>bar</name> <op:operator>=</op:operator> <lit:literal type=""number"">42</lit:literal></expr>;</expr_stmt> }</block></constructor>
+    <constructor><specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>bar</name> <operator>=</operator> <literal type=""number"">42</literal></expr>;</expr_stmt> }</block></constructor>
     <function><type><specifier>public</specifier> <name>int</name></type> <name>GetBar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>bar</name></expr>;</return> }</block></function>
+}</block></class>";*/
+            string fooXml = @"<package>package <name><name>com</name><operator>.</operator><name>ABB</name><operator>.</operator><name>Example</name></name>;</package>
+<class>class <name>Foo</name> <block>{
+    <decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
+    <constructor><specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><name>bar</name> <operator>=</operator> <literal type=""number"">42</literal></expr>;</expr_stmt> </block_content>}</block></constructor>
+    <function><type><specifier>public</specifier> <name>int</name></type> <name>GetBar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>bar</name></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             var fooFileUnit = FileUnitSetup.GetFileUnitForXmlSnippet(fooXml, "Foo.java");
             var beforeScope = CodeParser.ParseFileUnit(fooFileUnit);
             ////Baz.java
@@ -74,10 +91,15 @@ namespace ABB.SrcML.Data.Test {
             //class Baz {
             //    public static int DoWork() { return 0; }
             //}
-            string bazXml = @"<decl_stmt><decl><type><name>package</name></type> <name><name>com</name><op:operator>.</op:operator><name>ABB</name><op:operator>.</op:operator><name>Example</name></name></decl>;</decl_stmt>
+            /*string bazXml = @"<decl_stmt><decl><type><name>package</name></type> <name><name>com</name><operator>.</operator><name>ABB</name><operator>.</operator><name>Example</name></name></decl>;</decl_stmt>
 <class>class <name>Baz</name> <block>{
-    <function><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>DoWork</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return> }</block></function>
+    <function><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>DoWork</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=""number"">0</literal></expr>;</return> }</block></function>
+}</block></class>";*/
+            string bazXml = @"<package>package <name><name>com</name><operator>.</operator><name>ABB</name><operator>.</operator><name>Example</name></name>;</package>
+<class>class <name>Baz</name> <block>{
+    <function><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>DoWork</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             var bazFileUnit = FileUnitSetup.GetFileUnitForXmlSnippet(bazXml, "Baz.java");
             var afterScope = beforeScope.Merge(CodeParser.ParseFileUnit(bazFileUnit));
 
@@ -97,12 +119,19 @@ namespace ABB.SrcML.Data.Test {
             //    public Foo() { bar = 42; }
             //    public int GetBar() { return bar; }
             //}
-            string fooXml = @"<package>package <name><name>com</name><op:operator>.</op:operator><name>ABB</name><op:operator>.</op:operator><name>example</name></name>;</package>
+            /*string fooXml = @"<package>package <name><name>com</name><operator>.</operator><name>ABB</name><operator>.</operator><name>example</name></name>;</package>
 <class>class <name>Foo</name> <block>{
 	<decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
-	<constructor><specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>bar</name> <op:operator>=</op:operator> <lit:literal type=""number"">42</lit:literal></expr>;</expr_stmt> }</block></constructor>
+	<constructor><specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>bar</name> <operator>=</operator> <literal type=""number"">42</literal></expr>;</expr_stmt> }</block></constructor>
 	<function><type><specifier>public</specifier> <name>int</name></type> <name>GetBar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><name>bar</name></expr>;</return> }</block></function>
+}</block></class>";*/
+            string fooXml = @"<package>package <name><name>com</name><operator>.</operator><name>ABB</name><operator>.</operator><name>example</name></name>;</package>
+<class>class <name>Foo</name> <block>{
+    <decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>bar</name></decl>;</decl_stmt>
+    <constructor><specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><name>bar</name> <operator>=</operator> <literal type=""number"">42</literal></expr>;</expr_stmt> </block_content>}</block></constructor>
+    <function><type><specifier>public</specifier> <name>int</name></type> <name>GetBar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>bar</name></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             var fooFileUnit = FileUnitSetup.GetFileUnitForXmlSnippet(fooXml, "Foo.java");
             var beforeScope = CodeParser.ParseFileUnit(fooFileUnit);
             ////Baz.java
@@ -110,10 +139,15 @@ namespace ABB.SrcML.Data.Test {
             //class Baz {
             //    public static int DoWork() { return 0; }
             //}
-            string bazXml = @"<package>package <name><name>com</name><op:operator>.</op:operator><name>ABB</name><op:operator>.</op:operator><name>DifferentExample</name></name>;</package>
+            /*string bazXml = @"<package>package <name><name>com</name><operator>.</operator><name>ABB</name><operator>.</operator><name>DifferentExample</name></name>;</package>
 <class>class <name>Baz</name> <block>{
-	<function><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>DoWork</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return> }</block></function>
+	<function><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>DoWork</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=""number"">0</literal></expr>;</return> }</block></function>
+}</block></class>";*/
+            string bazXml = @"<package>package <name><name>com</name><operator>.</operator><name>ABB</name><operator>.</operator><name>DifferentExample</name></name>;</package>
+<class>class <name>Baz</name> <block>{
+    <function><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>DoWork</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             var bazFileUnit = FileUnitSetup.GetFileUnitForXmlSnippet(bazXml, "Baz.java");
             var afterScope = beforeScope.Merge(CodeParser.ParseFileUnit(bazFileUnit));
 

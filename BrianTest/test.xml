@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Java" filename="test.java">
+	
+	<package>package <name><name>A</name><operator>.</operator><name>B</name></name>;</package>
+<class>class <name>C</name> <block>{
+	<constructor><specifier>public</specifier> <name>C</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></constructor>
+}</block></class></unit>

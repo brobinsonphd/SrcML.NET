@@ -30,7 +30,7 @@ namespace ABB.SrcML
         /// <summary>
         /// XNamespace for the SrcML Modifier XML namespace
         /// </summary>
-        public static readonly XNamespace NS = "http://www.sdml.info/srcML/modifier";
+        public static readonly XNamespace NS = "http://www.srcML.org/srcML/type";
 
         /// <summary>
         /// XMLNS prefix for the SrcML TYPE namespace
@@ -40,7 +40,7 @@ namespace ABB.SrcML
         /// <summary>
         /// Argument string to pass to one of the srcml executables to enable this namespace
         /// </summary>
-        public const string ArgumentLabel = "--modifier";
+        public const string ArgumentLabel = "";
 
         /// <summary>
         /// Operator element -- all operators are surrounded with this:

@@ -25,6 +25,7 @@ namespace ABB.SrcML.Test {
             TestConcurrencyLimit(new LimitedConcurrencyLevelTaskScheduler(2));
         }
 
+        /*
         [Test]
         public void TestStartAndStop() {
             int NUM_TASKS = 10;
@@ -66,7 +67,7 @@ namespace ABB.SrcML.Test {
             Task.WaitAll(tasks);
             Assert.AreEqual(0, currentlyExecuting);
         }
-
+        */
         private static void TestConcurrencyLimit(LimitedConcurrencyLevelTaskScheduler scheduler) {
             var factory = new TaskFactory(scheduler);
             bool IsIdled = true;

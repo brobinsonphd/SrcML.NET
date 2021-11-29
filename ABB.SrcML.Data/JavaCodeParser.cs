@@ -27,7 +27,7 @@ namespace ABB.SrcML.Data {
         /// Creates a new java code parser object
         /// </summary>
         public JavaCodeParser() {
-            this.TypeElementNames = new HashSet<XName>(new XName[] { SRC.Class, SRC.Enum });
+            this.TypeElementNames = new HashSet<XName>(new XName[] { SRC.Class, SRC.Enum, SRC.Interface });
             this.NamespaceElementNames = new HashSet<XName>();
             this.AliasElementName = SRC.Import;
         }
@@ -46,15 +46,26 @@ namespace ABB.SrcML.Data {
         /// <param name="typeElement">The type element</param>
         /// <returns>The parent type elements for the class</returns>
         protected override IEnumerable<XElement> GetParentTypeUseElements(XElement typeElement) {
-            var superTag = typeElement.Element(SRC.Super);
-
+            var superTag = typeElement.Element(SRC.SuperList);
+ 
             var parentElements = Enumerable.Empty<XElement>();
-
-            if(null != superTag) {
+            if (superTag != null)
+            {
                 parentElements = from element in superTag.Elements()
                                  where element.Name == SRC.Extends || element.Name == SRC.Implements
-                                 from name in element.Elements(SRC.Name)
-                                 select name;
+                                 from name in element.Elements(SRC.Super).Elements(SRC.Name)
+                                 select name;                
+            }
+            else
+            {
+                superTag = typeElement.Element(SRC.Super);
+                if (null != superTag)
+                {
+                    parentElements = from element in superTag.Elements()
+                                     where element.Name == SRC.Extends || element.Name == SRC.Implements
+                                     from name in element.Elements(SRC.Name)
+                                     select name;
+                }                
             }
             return parentElements;
         }
@@ -113,7 +124,7 @@ namespace ABB.SrcML.Data {
 
             var nameElement = packageElement.Element(SRC.Name);
             if(nameElement == null) {
-                throw new ParseException(context.FileName, packageElement.GetSrcLineNumber(), packageElement.GetSrcLinePosition(), this,
+                throw new ParseException(context.FileName, packageElement.GetSrcStartLineNumber(), packageElement.GetSrcStartLinePosition(), this,
                                             "No SRC.Name element found in namespace.", null);
             }
 
@@ -193,7 +204,7 @@ namespace ABB.SrcML.Data {
             if(context == null)
                 throw new ArgumentNullException("context");
 
-            if(forElement.Element(SRC.Condition) != null) {
+            if(forElement.Element(SRC.Control).Element(SRC.Condition) != null) {
                 //this is a standard for-loop, use the base processing
                 return base.ParseForElement(forElement, context);
             }
@@ -238,6 +249,19 @@ namespace ABB.SrcML.Data {
                 throw new ArgumentNullException("context");
 
             var isNamespaceImport = GetTextNodes(aliasElement).Any(n => n.Value.Contains("*"));
+            if (isNamespaceImport == false)
+            {
+                foreach (var callElement in aliasElement.Elements())
+                {                    
+                    if (callElement.Name == SRC.Name)
+                    {
+                        if (callElement.Value.Contains("*"))
+                        {
+                            isNamespaceImport = true;
+                        }
+                    }
+                }
+            }
 
             Statement stmt = null;
             if(isNamespaceImport) {
@@ -245,9 +269,19 @@ namespace ABB.SrcML.Data {
                 var import = new ImportStatement() {ProgrammingLanguage = ParserLanguage};
                 import.AddLocation(context.CreateLocation(aliasElement));
                 var nameElement = aliasElement.Element(SRC.Name);
-                if(nameElement != null) {
-                    import.ImportedNamespace = ParseNameUseElement<NamespaceUse>(nameElement, context);
-                    //TODO: fix to handle the trailing operator tag
+                if(nameElement != null) 
+                {
+                    if(nameElement.Elements().LastOrDefault().Value == "*")
+                    {
+                        //remove trailing * and operator "."
+                        nameElement.Elements().LastOrDefault().Remove();
+                        nameElement.Elements().LastOrDefault().Remove();
+                        import.ImportedNamespace = ParseNameUseElement<NamespaceUse>(nameElement, context);
+                    }
+                    else
+                    {
+                        import.ImportedNamespace = ParseNameUseElement<NamespaceUse>(nameElement, context);
+                    }                                      
                 }
                 stmt = import;
             } else {

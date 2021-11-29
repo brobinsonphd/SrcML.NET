@@ -137,7 +137,7 @@ namespace ABB.SrcML.Data {
         /// <param name="message">An optional message</param>
         protected void LogUnknown(XElement element, ParserContext context, string message) {
             if(null != UnknownLog) {
-                UnknownLog.Write("{0}({1},{2}) Unexpected {3}", context.FileName, element.GetSrcLineNumber(), element.GetSrcLinePosition(), element.Name, message);
+                UnknownLog.Write("{0}({1},{2}) Unexpected {3}", context.FileName, element.GetSrcStartLineNumber(), element.GetSrcEndingLinePosition(), element.Name, message);
                 if(!String.IsNullOrWhiteSpace(message)) {
                     UnknownLog.WriteLine(" ({0})", message);
                 }
@@ -157,63 +157,120 @@ namespace ABB.SrcML.Data {
         protected virtual Statement ParseStatement(XElement element, ParserContext context) {
             try {
                 Statement stmt = null;
-                if(TypeElementNames.Contains(element.Name)) {
+                if (TypeElementNames.Contains(element.Name))
+                {
                     stmt = ParseTypeElement(element, context);
-                } else if(NamespaceElementNames.Contains(element.Name)) {
+                }
+                else if (NamespaceElementNames.Contains(element.Name))
+                {
                     stmt = ParseNamespaceElement(element, context);
-                } else if(element.Name == AliasElementName) {
+                }
+                else if ((element.Name == SRC.Using) || (element.Name == SRC.UsingStatement) || (element.Name == SRC.Import))
+                {
                     stmt = ParseAliasElement(element, context);
-                } else if(MethodElementNames.Contains(element.Name)) {
+                }
+                else if (MethodElementNames.Contains(element.Name))
+                {
                     stmt = ParseMethodElement(element, context);
-                } else if(element.Name == SRC.If) {
+                }
+                else if ( (element.Name == SRC.IfStatement) || (element.Name == SRC.If) )
+                {
                     stmt = ParseIfElement(element, context);
-                } else if(element.Name == SRC.While) {
+                }
+                else if (element.Name == SRC.While)
+                {
                     stmt = ParseWhileElement(element, context);
-                } else if(element.Name == SRC.Do) {
+                }
+                else if (element.Name == SRC.Do)
+                {
                     stmt = ParseDoElement(element, context);
-                } else if(element.Name == SRC.For) {
+                }
+                else if (element.Name == SRC.For)
+                {
                     stmt = ParseForElement(element, context);
-                } else if(element.Name == SRC.Foreach) {
+                }
+                else if (element.Name == SRC.Foreach)
+                {
                     stmt = ParseForeachElement(element, context);
-                } else if(element.Name == SRC.Switch) {
+                }
+                else if (element.Name == SRC.Switch)
+                {
                     stmt = ParseSwitchElement(element, context);
-                } else if(element.Name == SRC.Case || element.Name == SRC.Default) {
+                }
+                else if (element.Name == SRC.Case || element.Name == SRC.Default)
+                {
                     stmt = ParseCaseElement(element, context);
-                } else if(element.Name == SRC.Continue) {
+                }
+                else if (element.Name == SRC.Continue)
+                {
                     stmt = ParseContinueElement(element, context);
-                } else if(element.Name == SRC.Break) {
+                }
+                else if (element.Name == SRC.Break)
+                {
                     stmt = ParseBreakElement(element, context);
-                } else if(element.Name == SRC.Return) {
+                }
+                else if (element.Name == SRC.Return)
+                {
                     stmt = ParseReturnElement(element, context);
-                } else if(element.Name == SRC.Goto) {
+                }
+                else if (element.Name == SRC.Goto)
+                {
                     stmt = ParseGotoElement(element, context);
-                } else if(element.Name == SRC.Label) {
+                }
+                else if (element.Name == SRC.Label)
+                {
                     stmt = ParseLabelElement(element, context);
-                } else if(element.Name == SRC.Throw) {
+                }
+                else if (element.Name == SRC.Throw)
+                {
                     stmt = ParseThrowElement(element, context);
-                } else if(element.Name == SRC.Try) {
+                }
+                else if (element.Name == SRC.Try)
+                {
                     stmt = ParseTryElement(element, context);
-                } else if(element.Name == SRC.ExpressionStatement) {
+                }
+                else if (element.Name == SRC.ExpressionStatement)
+                {
                     stmt = ParseExpressionStatementElement(element, context);
-                } else if(element.Name == SRC.DeclarationStatement) {
+                }
+                else if ( (element.Name == SRC.DeclarationStatement) || (element.Name == SRC.Property) )
+                {
                     stmt = ParseDeclarationStatementElement(element, context);
-                } else if(element.Name == SRC.Block) {
+                }                
+                else if (element.Name == SRC.Block) 
+                {
                     stmt = ParseBlockElement(element, context);
-                } else if(element.Name == SRC.Extern) {
+                }                
+                else if (element.Name == SRC.Extern)
+                {
                     stmt = ParseExternElement(element, context);
-                } else if(element.Name == SRC.EmptyStatement) {
+                }
+                else if (element.Name == SRC.EmptyStatement)
+                {
                     stmt = ParseEmptyStatementElement(element, context);
-                } else if(element.Name == SRC.Lock) {
+                }
+                else if (element.Name == SRC.Lock)
+                {
                     stmt = ParseLockElement(element, context);
-                } else if(element.Name == SRC.Comment) {
+                }
+                else if (element.Name == SRC.Comment)
+                {
                     // do nothing. we are ignoring comments
-                } else if(element.Name == SRC.Package) {
+                }
+                else if (element.Name == SRC.Package)
+                {
                     //do nothing. This is already handled in JavaCodeParser.ParseUnitElement()
-                } else if(element.Name.Namespace == CPP.NS) {
+                }
+                else if (element.Name.Namespace == CPP.NS)
+                {
                     //do nothing. skip any cpp preprocessor macros
-                } else if(NotImplementedStatements.Contains(element.Name)) {
+                }
+                else if (NotImplementedStatements.Contains(element.Name))
+                {
                     //do nothing. These are known and we're skipping them for now.
-                } else {
+                }
+                else
+                {
                     LogUnknown(element, context, "ParseStatement");
                 }
 
@@ -221,8 +278,8 @@ namespace ABB.SrcML.Data {
             } catch(ParseException) {
                 throw;
             } catch(Exception e) {
-                int lineNumber = element.GetSrcLineNumber();
-                int columnNumber = element.GetSrcLinePosition();
+                int lineNumber = element.GetSrcStartLineNumber();
+                int columnNumber = element.GetSrcEndingLinePosition();
                 throw new ParseException(context.FileName, lineNumber, columnNumber, this, e.Message, e);
             }
         }
@@ -278,7 +335,7 @@ namespace ABB.SrcML.Data {
             }
 
             //add the constructor initializer list, if any
-            var memberListElement = methodElement.Element(SRC.MemberList);
+            var memberListElement = methodElement.Element(SRC.MemberInitList);
             if(memberListElement != null) {
                 foreach(var callElement in memberListElement.Elements(SRC.Call)) {
                     var call = ParseCallElement(callElement, context) as MethodCall;
@@ -296,7 +353,7 @@ namespace ABB.SrcML.Data {
             //Add the method body statements as children
             var methodBlock = methodElement.Element(SRC.Block);
             if(methodBlock != null) {
-                foreach(var child in methodBlock.Elements()) {
+                foreach(var child in methodBlock.Element(SRC.BlockContent).Elements()) {
                     methodDefinition.AddChildStatement(ParseStatement(child, context));
                 }
             }
@@ -339,47 +396,170 @@ namespace ABB.SrcML.Data {
         protected virtual IfStatement ParseIfElement(XElement ifElement, ParserContext context) {
             if(ifElement == null) 
                 throw new ArgumentNullException("ifElement");
-            if(ifElement.Name != SRC.If) 
-                throw new ArgumentException("must be a SRC.If element", "ifElement");
+            if( (ifElement.Name != SRC.IfStatement) && (ifElement.Name != SRC.If) )
+                throw new ArgumentException("must be a SRC.IfStatement element", "ifElement");
             if(context == null)
                 throw new ArgumentNullException("context");
+
+           //var stripIfStmtOff = ifElement.Elements();            
 
             var ifStmt = new IfStatement() {ProgrammingLanguage = ParserLanguage};
             ifStmt.AddLocation(context.CreateLocation(ifElement));
 
             foreach(var ifChild in ifElement.Elements()) {
-                if(ifChild.Name == SRC.Condition) {
-                    //fill in condition
-                    var expElement = GetFirstChildExpression(ifChild);
-                    if(expElement != null) {
-                        ifStmt.Condition = ParseExpression(expElement, context);
+                if (ifChild.Name == SRC.If)
+                {
+                    if (ifChild.HasAttributes != true)
+                    {
+                        foreach (var ifChildElement in ifChild.Elements())
+                        {
+                            if (ifChildElement.Name == SRC.Condition)
+                            {
+                                //Get condition to fill in    
+                                var expElement = GetFirstChildExpression(ifChild.Element(SRC.Condition));
+                                if (expElement != null)
+                                {
+                                    ifStmt.Condition = ParseExpression(expElement, context);
+                                }
+                            }
+                            else if (ifChildElement.Name == SRC.Block)
+                            {
+                                if (ifChildElement.Element(SRC.BlockContent) != null)
+                                {
+                                    var blockStatements = ifChildElement.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                                    ifStmt.AddChildStatements(blockStatements);
+                                }
+                                else
+                                {
+                                    LogUnknown(ifChildElement, context, "ForStatement");
+                                }
+
+                            }
+                            else
+                            {
+                                ifStmt.AddChildStatement(ParseStatement(ifChildElement, context));
+                            }
+                        }
+
                     }
-                } else if(ifChild.Name == SRC.Then) {
-                    //add the then statements
-                    foreach(var thenChild in ifChild.Elements()) {
-                        if(thenChild.Name == SRC.Block) {
-                            var blockStatements = thenChild.Elements().Select(e => ParseStatement(e, context));
-                            ifStmt.AddChildStatements(blockStatements);
-                        } else {
-                            ifStmt.AddChildStatement(ParseStatement(thenChild, context));
+                    else if ((ifChild.HasAttributes == true) && (ifChild.FirstAttribute.ToString() == @"type=""elseif"""))
+                    {
+                        /* Pass the If statement through as a new element to parse */
+                        ifStmt.AddElseStatement(ParseElseIfElement(ifChild, context));
+                    }
+                    else
+                    {
+                        foreach (var ifChildElement in ifChild.Elements())
+                        {
+                            if (ifChildElement.Name == SRC.Condition)
+                            {
+                                //Get condition to fill in    
+                                var expElement = GetFirstChildExpression(ifChild.Element(SRC.Condition));
+                                if (expElement != null)
+                                {
+                                    ifStmt.Condition = ParseExpression(expElement, context);
+                                }
+                            }
+                            else if (ifChildElement.Name == SRC.Block)
+                            {
+                                if (ifChildElement.Element(SRC.BlockContent) != null)
+                                {
+                                    var blockStatements = ifChildElement.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                                    ifStmt.AddChildStatements(blockStatements);
+                                }
+                                else
+                                {
+                                    LogUnknown(ifChildElement, context, "ForStatement");
+                                }
+
+                            }
+                            else
+                            {
+                                ifStmt.AddChildStatement(ParseStatement(ifChildElement, context));
+                            }
                         }
                     }
-                } else if(ifChild.Name == SRC.Else) {
+                }
+                else if (ifChild.Name == SRC.Else)
+                {
                     //add the else statements
-                    foreach(var elseChild in ifChild.Elements()) {
-                        if(elseChild.Name == SRC.Block) {
-                            var blockStatements = elseChild.Elements().Select(e => ParseStatement(e, context));
-                            ifStmt.AddElseStatements(blockStatements);
-                        } else {
+                    foreach (var elseChild in ifChild.Elements())
+                    {
+                        if (elseChild.Name == SRC.Block)
+                        {
+                            if (elseChild.Element(SRC.BlockContent) != null)
+                            {
+                                var blockStatements = elseChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                                ifStmt.AddElseStatements(blockStatements);
+                            }
+                            else
+                            {
+                                LogUnknown(elseChild, context, "ForStatement");
+                            }
+                        }
+                        else
+                        {
                             ifStmt.AddElseStatement(ParseStatement(elseChild, context));
                         }
                     }
-                } else {
+                }
+                else
+                {
                     //Add as a child statement (i.e. a then statement)
                     ifStmt.AddChildStatement(ParseStatement(ifChild, context));
                 }
             }
 
+            return ifStmt;
+        }
+
+        /// <summary>
+        /// Creates an <see cref="IfStatement"/> object for <paramref name="ifElement"/>.
+        /// </summary>
+        /// <param name="ifElement">The element to parse.</param>
+        /// <param name="context">The context to use.</param>
+        /// <returns>An IfStatement corresponding to ifElement.</returns>
+        protected virtual IfStatement ParseElseIfElement(XElement ifElement, ParserContext context)
+        {
+            if (ifElement == null)
+                throw new ArgumentNullException("ifElement");
+            if ( (ifElement.Name != SRC.If) && (ifElement.HasAttributes != true) )
+                throw new ArgumentException("must be a SRC.If (elseif) element", "ifElement");
+            if (context == null)
+                throw new ArgumentNullException("context");                       
+
+            var ifStmt = new IfStatement() { ProgrammingLanguage = ParserLanguage };
+            ifStmt.AddLocation(context.CreateLocation(ifElement));
+
+            foreach (var ifChild in ifElement.Elements())
+            {
+                if (ifChild.Name == SRC.Condition)
+                {
+                    //Get condition to fill in    
+                    var expElement = GetFirstChildExpression(ifChild);
+                    if (expElement != null)
+                    {
+                        ifStmt.Condition = ParseExpression(expElement, context);
+                    }
+                }
+                else if (ifChild.Name == SRC.Block)
+                {
+                    if (ifChild.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = ifChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        ifStmt.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(ifChild, context, "IfElseIfStatement");
+                    }
+
+                }
+                else
+                {
+                    ifStmt.AddChildStatement(ParseStatement(ifChild, context));
+                }
+            }                                
             return ifStmt;
         }
 
@@ -408,15 +588,22 @@ namespace ABB.SrcML.Data {
                         whileStmt.Condition = ParseExpression(expElement, context);
                     }
                 } else if(whileChild.Name == SRC.Block) {
-                    //has a block, add children
-                    var blockStatements = whileChild.Elements().Select(e => ParseStatement(e, context));
-                    whileStmt.AddChildStatements(blockStatements);
+                    //has a block, add children                    
+                    if (whileChild.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = whileChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        whileStmt.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(whileChild, context, "ForStatement");
+                    }
+
                 } else {
                     //child outside of block
                     whileStmt.AddChildStatement(ParseStatement(whileChild, context));
                 }
             }
-
             return whileStmt;
         }
 
@@ -439,28 +626,53 @@ namespace ABB.SrcML.Data {
             forStmt.AddLocation(context.CreateLocation(forElement));
 
             foreach(var forChild in forElement.Elements()) {
-                if(forChild.Name == SRC.Init) {
-                    //fill in initializer
-                    var expElement = GetFirstChildExpression(forChild);
-                    if(expElement != null) {
-                        forStmt.Initializer = ParseExpression(expElement, context);
-                    }
-                } else if(forChild.Name == SRC.Condition) {
-                    //fill in condition
-                    var expElement = GetFirstChildExpression(forChild);
-                    if(expElement != null) {
-                        forStmt.Condition = ParseExpression(expElement, context);
-                    }
-                } else if(forChild.Name == SRC.Increment) {
-                    //fill in incrementer
-                    var expElement = GetFirstChildExpression(forChild);
-                    if(expElement != null) {
-                        forStmt.Incrementer = ParseExpression(expElement, context);
+                if (forChild.Name == SRC.Control) 
+                {
+                    foreach (var controlChild in forChild.Elements())
+                    {
+                        if (controlChild.Name == SRC.Init)
+                        {
+                            //fill in initializer
+                            var expElement = GetFirstChildExpression(controlChild);
+                            if (expElement != null)
+                            {
+                                forStmt.Initializer = ParseExpression(expElement, context);
+                            }
+                        }
+                        else if (controlChild.Name == SRC.Condition)
+                        {
+                            //fill in condition
+                            var expElement = GetFirstChildExpression(controlChild);
+                            if (expElement != null)
+                            {
+                                forStmt.Condition = ParseExpression(expElement, context);
+                            }
+                        }
+                        else if (controlChild.Name == SRC.Increment)
+                        {
+                            //fill in incrementer
+                            var expElement = GetFirstChildExpression(controlChild);
+                            if (expElement != null)
+                            {
+                                forStmt.Incrementer = ParseExpression(expElement, context);
+                            }
+                        }
+                        else
+                        {
+                            // error, unexpected expression                         
+                        }
                     }
                 } else if(forChild.Name == SRC.Block) {
                     //add children from block
-                    var blockStatements = forChild.Elements().Select(e => ParseStatement(e, context));
-                    forStmt.AddChildStatements(blockStatements);
+                    if (forChild.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = forChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        forStmt.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(forChild, context, "ForStatement");
+                    }
                 } else {
                     //add child
                     forStmt.AddChildStatement(ParseStatement(forChild, context));
@@ -487,24 +699,57 @@ namespace ABB.SrcML.Data {
             var foreachStmt = new ForeachStatement() {ProgrammingLanguage = ParserLanguage};
             foreachStmt.AddLocation(context.CreateLocation(foreachElement));
 
-            foreach(var child in foreachElement.Elements()) {
-                if(child.Name == SRC.Init) {
-                    //fill in condition/initializer
-                    var expElement = GetFirstChildExpression(child);
-                    if(expElement != null) {
-                        foreachStmt.Condition = ParseExpression(expElement, context);
+            foreach (var child in foreachElement.Elements())
+            {              
+                if (child.Name == SRC.Control)
+                {
+                    foreach (var controlChild in child.Elements())
+                    {
+                        if (controlChild.Name == SRC.Init)
+                        {
+                            //fill in initializer
+                            var expElement = GetFirstChildExpression(controlChild);
+                            if (expElement != null)
+                            {
+                                foreachStmt.Condition = ParseExpression(expElement, context);
+                            }
+                        }
+                        else if (controlChild.Name == SRC.Condition)
+                        {
+                            //fill in condition
+                            var expElement = GetFirstChildExpression(controlChild);
+                            if (expElement != null)
+                            {
+                                foreachStmt.Condition = ParseExpression(expElement, context);
+                            }
+                        }                        
+                        else
+                        {
+                            // error, unexpected expression                         
+                        }
                     }
-                } else if(child.Name == SRC.Block) {
+                }
+                else if (child.Name == SRC.Block)
+                {
                     //add children from block
-                    var blockStatements = child.Elements().Select(e => ParseStatement(e, context));
-                    foreachStmt.AddChildStatements(blockStatements);
-                } else {
+                    if (child.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = child.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        foreachStmt.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(child, context, "ForStatement");
+                    }
+                }
+                else
+                {
                     //add child
                     foreachStmt.AddChildStatement(ParseStatement(child, context));
                 }
             }
-
             return foreachStmt;
+            
         }
 
         /// <summary>
@@ -532,9 +777,16 @@ namespace ABB.SrcML.Data {
                         doStmt.Condition = ParseExpression(expElement, context);
                     }
                 } else if(doChild.Name == SRC.Block) {
-                    //has a block, add children
-                    var blockStatements = doChild.Elements().Select(e => ParseStatement(e, context));
-                    doStmt.AddChildStatements(blockStatements);
+                    //has a block, add children                   
+                    if (doChild.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = doChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        doStmt.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(doChild, context, "ForStatement");
+                    }
                 } else {
                     //child outside of block
                     doStmt.AddChildStatement(ParseStatement(doChild, context));
@@ -569,9 +821,17 @@ namespace ABB.SrcML.Data {
                         switchStmt.Condition = ParseExpression(expElement, context);
                     }
                 } else if(switchChild.Name == SRC.Block) {
-                    //add children from block
-                    var blockStatements = switchChild.Elements().Select(e => ParseStatement(e, context));
-                    switchStmt.AddChildStatements(blockStatements);
+                    //add children from block                    
+                    if (switchChild.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = switchChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        switchStmt.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(switchChild, context, "ForStatement");
+                    }
+
                 } else {
                     //add child
                     switchStmt.AddChildStatement(ParseStatement(switchChild, context));
@@ -607,9 +867,16 @@ namespace ABB.SrcML.Data {
                     caseStmt.Condition = ParseExpressionElement(caseChild, context);
                 }
                 else if(caseChild.Name == SRC.Block) {
-                    //add children from block
-                    var blockStatements = caseChild.Elements().Select(e => ParseStatement(e, context));
-                    caseStmt.AddChildStatements(blockStatements);
+                    //add children from block                   
+                    if (caseChild.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = caseChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        caseStmt.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(caseChild, context, "ForStatement");
+                    }
                 } else {
                     //add child
                     caseStmt.AddChildStatement(ParseStatement(caseChild, context));
@@ -783,16 +1050,24 @@ namespace ABB.SrcML.Data {
                     //add finally children
                     foreach(var finallyChild in tryChild.Elements()) {
                         if(finallyChild.Name == SRC.Block) {
-                            var blockStatements = finallyChild.Elements().Select(e => ParseStatement(e, context));
+                            var blockStatements = finallyChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
                             tryStmt.AddFinallyStatements(blockStatements);
                         } else {
                             tryStmt.AddFinallyStatement(ParseStatement(finallyChild, context));
                         }
                     }
                 } else if(tryChild.Name == SRC.Block) {
-                    //add children from block
-                    var blockStatements = tryChild.Elements().Select(e => ParseStatement(e, context));
-                    tryStmt.AddChildStatements(blockStatements);
+                    //add children from block                                        
+                    if (tryChild.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = tryChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        tryStmt.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(tryChild, context, "ForStatement");
+                    }
+
                 } else {
                     //add child
                     tryStmt.AddChildStatement(ParseStatement(tryChild, context));
@@ -827,9 +1102,17 @@ namespace ABB.SrcML.Data {
                         catchStmt.Parameter = ParseParameterElement(paramElement, context);
                     }
                 } else if(catchChild.Name == SRC.Block) {
-                    //add children of the block
-                    var blockStatements = catchChild.Elements().Select(e => ParseStatement(e, context));
-                    catchStmt.AddChildStatements(blockStatements);
+                    //add children of the block                  
+                    if (catchChild.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = catchChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        catchStmt.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(catchChild, context, "ForStatement");
+                    }
+
                 } else {
                     //add child
                     catchStmt.AddChildStatement(ParseStatement(catchChild, context));
@@ -882,12 +1165,13 @@ namespace ABB.SrcML.Data {
         protected virtual Statement ParseDeclarationStatementElement(XElement stmtElement, ParserContext context) {
             if(stmtElement == null)
                 throw new ArgumentNullException("stmtElement");
-            if(stmtElement.Name != SRC.DeclarationStatement)
+            if((stmtElement.Name != SRC.DeclarationStatement) && (stmtElement.Name != SRC.Declaration))
                 throw new ArgumentException("Must be a SRC.DeclarationStatement element", "stmtElement");
             if(context == null)
                 throw new ArgumentNullException("context");
 
-            var stmt = new DeclarationStatement() {
+            var stmt = new DeclarationStatement()
+            {
                 ProgrammingLanguage = ParserLanguage,
                 Content = ParseExpression(GetChildExpressions(stmtElement), context)
             };
@@ -988,7 +1272,7 @@ namespace ABB.SrcML.Data {
         protected virtual BlockStatement ParseBlockElement(XElement blockElement, ParserContext context) {
             if(blockElement == null)
                 throw new ArgumentNullException("blockElement");
-            if(blockElement.Name != SRC.Block)
+            if((blockElement.Name != SRC.Block) && (blockElement.Name != SRC.BlockContent))
                 throw new ArgumentException("must be a SRC.Block element", "blockElement");
             if(context == null)
                 throw new ArgumentNullException("context");
@@ -996,12 +1280,23 @@ namespace ABB.SrcML.Data {
             var bs = new BlockStatement() {ProgrammingLanguage = ParserLanguage};
             bs.AddLocation(context.CreateLocation(blockElement));
 
-            foreach(var child in blockElement.Elements()) {
-                bs.AddChildStatement(ParseStatement(child, context));
+            if( blockElement.Element(SRC.BlockContent) != null ) 
+            {
+                foreach (var child in blockElement.Element(SRC.BlockContent).Elements())
+                {
+                    bs.AddChildStatement(ParseStatement(child, context));
+                }
             }
-
+            else
+            {
+                foreach (var child in blockElement.Elements())
+                {
+                    bs.AddChildStatement(ParseStatement(child, context));
+                }            
+            }
+            
             return bs;
-        }
+        }       
 
         /// <summary>
         /// Creates an ExternStatement from the given extern element.
@@ -1022,12 +1317,20 @@ namespace ABB.SrcML.Data {
             es.AddLocation(context.CreateLocation(externElement));
 
             foreach(var exChild in externElement.Elements()) {
-                if(exChild.Name == LIT.Literal) {
+                if(exChild.Name == SRC.Literal) {
                     es.LinkageType = exChild.Value;
                 } else if(exChild.Name == SRC.Block) {
-                    //add children from block
-                    var blockStatements = exChild.Elements().Select(e => ParseStatement(e, context));
-                    es.AddChildStatements(blockStatements);
+                    //add children from block                    
+                    if (exChild.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = exChild.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        es.AddChildStatements(blockStatements);
+                    }
+                    else
+                    {
+                        LogUnknown(exChild, context, "ExternStatement");
+                    }
+
                 } else {
                     es.AddChildStatement(ParseStatement(exChild, context));
                 }
@@ -1070,14 +1373,20 @@ namespace ABB.SrcML.Data {
                 throw new ArgumentNullException("context");
 
             var lockStmt = new LockStatement() {ProgrammingLanguage = ParserLanguage};
-            lockStmt.AddLocation(context.CreateLocation(lockElement));
+            lockStmt.AddLocation(context.CreateLocation(lockElement));            
 
             foreach(var child in lockElement.Elements()) {
-                if(child.Name == SRC.Expression) {
-                    lockStmt.LockExpression = ParseExpression(child, context);
-                } else if(child.Name == SRC.Block) {
-                    var blockStatements = child.Elements().Select(e => ParseStatement(e, context));
-                    lockStmt.AddChildStatements(blockStatements);
+                if (child.Name == SRC.Init)
+                {
+                    lockStmt.LockExpression = ParseExpression(child.Element(SRC.Expression), context);                       
+                } else if(child.Name == SRC.Block) {                    
+                    if (child.Element(SRC.BlockContent) != null)
+                    {
+                        var blockStatements = child.Element(SRC.BlockContent).Elements().Select(e => ParseStatement(e, context));
+                        lockStmt.AddChildStatements(blockStatements);
+                    }
+                    
+
                 } else {
                     lockStmt.AddChildStatement(ParseStatement(child, context));
                 }
@@ -1122,11 +1431,13 @@ namespace ABB.SrcML.Data {
                     exp = ParseNameUseElement<T>(element, context);
                 } else if(element.Name == SRC.Type) {
                     exp = ParseTypeUseElement(element, context);
-                } else if(element.Name == OP.Operator) {
+                } else if(element.Name == SRC.Operator) {
                     exp = ParseOperatorElement(element, context);
                 } else if(element.Name == SRC.Call) {
                     exp = ParseCallElement(element, context);
-                } else if(element.Name == LIT.Literal) {
+                } else if(element.Name == SRC.Specifier) {
+                    //do what?
+                } else if(element.Name == SRC.Literal) {
                     exp = ParseLiteralElement(element, context);
                 } else if(element.Name == SRC.Comment) {
                     //skip
@@ -1148,8 +1459,8 @@ namespace ABB.SrcML.Data {
             } catch(ParseException) {
                 throw;
             } catch(Exception e) {
-                int lineNumber = element.GetSrcLineNumber();
-                int columnNumber = element.GetSrcLinePosition();
+                int lineNumber = element.GetSrcStartLineNumber();
+                int columnNumber = element.GetSrcStartLinePosition();
                 throw new ParseException(context.FileName, lineNumber, columnNumber, this, e.Message, e);
             }
         }
@@ -1353,14 +1664,14 @@ namespace ABB.SrcML.Data {
         /// <summary>
         /// Creates an OperatorUse object from the given operator element.
         /// </summary>
-        /// <param name="operatorElement">The OP.Operator element to parse.</param>
+        /// <param name="operatorElement">The SRC.Operator element to parse.</param>
         /// <param name="context">The parser context to use.</param>
         /// <returns>An OperatorUse corresponding to <paramref name="operatorElement"/>.</returns>
         protected virtual OperatorUse ParseOperatorElement(XElement operatorElement, ParserContext context) {
             if(operatorElement == null)
                 throw new ArgumentNullException("operatorElement");
-            if(operatorElement.Name != OP.Operator)
-                throw new ArgumentException("should be an OP.Operator", "operatorElement");
+            if(operatorElement.Name != SRC.Operator)
+                throw new ArgumentException("should be an SRC.Operator", "operatorElement");
             if(context == null)
                 throw new ArgumentNullException("context");
 
@@ -1413,20 +1724,42 @@ namespace ABB.SrcML.Data {
                 if(prefix == null) { 
                     //if there is no prefix, then the argument list element will be the first sibling of lastNameElement
                     argumentListElement = lastNameElement.ElementsAfterSelf(SRC.ArgumentList).FirstOrDefault();
-                } else {             
+                } else {
                     //otherwise, it will be the first *child* of lastNameElement
                     argumentListElement = lastNameElement.Elements(SRC.ArgumentList).FirstOrDefault();
+                    if (argumentListElement == null)
+                    {
+                        argumentListElement = typeNameElement.Element(SRC.ArgumentList);
+                    }
                 }
             }
 
-            if(argumentListElement != null) {
-                typeArguments = from argument in argumentListElement.Elements(SRC.Argument)
-                                where argument.Elements(SRC.Name).Any()
-                                select ParseTypeUseElement(argument.Element(SRC.Name), context);
-                // if this is a generic type use and there is a prefix (A::B::C) then the last name
-                // element will actually be the first child of lastNameElement
-                if(prefix != null) {
-                    lastNameElement = lastNameElement.Element(SRC.Name);
+            if(argumentListElement != null) 
+            {               
+                if (argumentListElement.Elements(SRC.Argument).Elements(SRC.Expression).Any())
+                {                    
+                    typeArguments = from argument in argumentListElement.Elements(SRC.Argument)
+                                    where (argument.Element(SRC.Expression).Element(SRC.Name) != null)
+                                    select ParseTypeUseElement(argument.Element(SRC.Expression).Element(SRC.Name), context);
+                    // if this is a generic type use and there is a prefix (A::B::C) then the last name
+                    // element will actually be the first child of lastNameElement
+
+                    /*if (prefix != null)
+                    {
+                        lastNameElement = lastNameElement.Element(SRC.Name);
+                    }*/
+                }
+                else
+                {
+                    typeArguments = from argument in argumentListElement.Elements(SRC.Argument)
+                                    where argument.Elements(SRC.Name).Any()
+                                    select ParseTypeUseElement(argument.Element(SRC.Name), context);
+                    // if this is a generic type use and there is a prefix (A::B::C) then the last name
+                    // element will actually be the first child of lastNameElement
+                    if (prefix != null)
+                    {
+                        lastNameElement = lastNameElement.Element(SRC.Name);
+                    }
                 }
             }
 
@@ -1521,11 +1854,11 @@ namespace ABB.SrcML.Data {
             }
 
             //check if this is a call to a constructor
-            if(callElement.ElementsBeforeSelf().Any(e => e.Name == OP.Operator && e.Value == "new")) {
+            if(callElement.ElementsBeforeSelf().Any(e => e.Name == SRC.Operator && e.Value == "new")) {
                 mc.IsConstructor = true;
             }
             var parentElement = callElement.Parent;
-            if(parentElement != null && parentElement.Name == SRC.MemberList) {
+            if(parentElement != null && parentElement.Name == SRC.MemberInitList) {
                 var container = parentElement.Parent;
                 if(container != null && container.Name == SRC.Constructor) {
                     mc.IsConstructor = true;
@@ -1560,14 +1893,14 @@ namespace ABB.SrcML.Data {
         /// <summary>
         /// Creates a LiteralUse object from the given element
         /// </summary>
-        /// <param name="literalElement">The element to parse. Must be a <see cref="ABB.SrcML.LIT.Literal"/> element.</param>
+        /// <param name="literalElement">The element to parse. Must be a <see cref="ABB.SrcML.SRC.Literal"/> element.</param>
         /// <param name="context">the parser context</param>
         /// <returns>A LiteralUse corresponding to <paramref name="literalElement"/>.</returns>
         protected virtual LiteralUse ParseLiteralElement(XElement literalElement, ParserContext context) {
             if(literalElement == null)
                 throw new ArgumentNullException("literalElement");
-            if(literalElement.Name != LIT.Literal)
-                throw new ArgumentException("Must be a LIT.Literal element", "literalElement");
+            if(literalElement.Name != SRC.Literal)
+                throw new ArgumentException("Must be a SRC.Literal element", "literalElement");
             if(context == null)
                 throw new ArgumentNullException("context");
 

@@ -42,10 +42,12 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestConstructorMerge_Cpp() {
             //A.h class A { A(); };
+            /*string header_xml = @"<class>class <name>A</name> <block>{<private type=""default""> <constructor_decl><name>A</name><parameter_list>()</parameter_list>;</constructor_decl> </private>}</block>;</class>";*/
             string header_xml = @"<class>class <name>A</name> <block>{<private type=""default""> <constructor_decl><name>A</name><parameter_list>()</parameter_list>;</constructor_decl> </private>}</block>;</class>";
 
             //A.cpp A::A() { }
-            string impl_xml = @"<constructor><name><name>A</name><op:operator>::</op:operator><name>A</name></name><parameter_list>()</parameter_list> <block>{ }</block></constructor>";
+            /*string impl_xml = @"<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <block>{ }</block></constructor>";*/
+            string impl_xml = @"<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></constructor>";
 
             var header = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(header_xml, "A.h");
             var implementation = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(impl_xml, "A.cpp");
@@ -84,29 +86,48 @@ namespace ABB.SrcML.Data.Test {
             //        virtual ~Bar();
             //    }
             //};
-            string headerXml = @"<class>class <name>Foo</name> 
+            /*string headerXml = @"<class>class <name>Foo</name> 
 <block>{<private type=""default"">
 </private><public>public:
-    <constructor_decl><name>Foo</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>char</name></type></decl></param>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>Foo</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>char</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
     <destructor_decl><specifier>virtual</specifier> <name>~<name>Foo</name></name><parameter_list>()</parameter_list>;</destructor_decl>
     <struct>struct <name>Bar</name>
     <block>{<public type=""default"">
-        <constructor_decl><name>Bar</name><parameter_list>(<param><decl><type><name>float</name></type></decl></param>, <param><decl><type><name>float</name></type></decl></param>)</parameter_list>;</constructor_decl>
+        <constructor_decl><name>Bar</name><parameter_list>(<parameter><decl><type><name>float</name></type></decl></parameter>, <parameter><decl><type><name>float</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
         <destructor_decl><specifier>virtual</specifier> <name>~<name>Bar</name></name><parameter_list>()</parameter_list>;</destructor_decl>
     </public>}</block>
+<decl/></struct></public>}</block>;</class>";*/
+
+            string headerXml = @"<class>class <name>Foo</name>
+<block>{<private type=""default"">
+</private><public>public:
+    <constructor_decl><name>Foo</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>char</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+    <destructor_decl><specifier>virtual</specifier> <name>~Foo</name><parameter_list>()</parameter_list>;</destructor_decl>
+    <struct>struct <name>Bar</name>
+    <block>{<public type=""default"">
+        <constructor_decl><name>Bar</name><parameter_list>(<parameter><decl><type><name>float</name></type></decl></parameter>, <parameter><decl><type><name>float</name></type></decl></parameter>)</parameter_list>;</constructor_decl>
+        <destructor_decl><specifier>virtual</specifier> <name>~Bar</name><parameter_list>()</parameter_list>;</destructor_decl>
+    </public>}</block>
 <decl/></struct></public>}</block>;</class>";
+
             //Foo.cpp
             //Foo::Bar::Bar(float a, float b) { }
             //Foo::Bar::~Bar() { }
             //
             //Foo::Foo(int a, int b, char c) { }
             //Foo::~Foo() { }
-            string implXml = @"<constructor><name><name>Foo</name><op:operator>::</op:operator><name>Bar</name><op:operator>::</op:operator><name>Bar</name></name><parameter_list>(<param><decl><type><name>float</name></type> <name>a</name></decl></param>, <param><decl><type><name>float</name></type> <name>b</name></decl></param>)</parameter_list> <block>{ }</block></constructor>
-<destructor><name><name>Foo</name><op:operator>::</op:operator><name>Bar</name><op:operator>::</op:operator>~<name>Bar</name></name><parameter_list>()</parameter_list> <block>{ }</block></destructor>
+            /*string implXml = @"<constructor><name><name>Foo</name><operator>::</operator><name>Bar</name><operator>::</operator><name>Bar</name></name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>b</name></decl></parameter>)</parameter_list> <block>{ }</block></constructor>
+<destructor><name><name>Foo</name><operator>::</operator><name>Bar</name><operator>::</operator>~<name>Bar</name></name><parameter_list>()</parameter_list> <block>{ }</block></destructor>
 
-<constructor><name><name>Foo</name><op:operator>::</op:operator><name>Foo</name></name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>int</name></type> <name>b</name></decl></param>, <param><decl><type><name>char</name></type> <name>c</name></decl></param>)</parameter_list> <block>{ }</block></constructor>
-<destructor><name><name>Foo</name><op:operator>::</op:operator>~<name>Foo</name></name><parameter_list>()</parameter_list> <block>{ }</block></destructor>
-";
+<constructor><name><name>Foo</name><operator>::</operator><name>Foo</name></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>, <parameter><decl><type><name>char</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{ }</block></constructor>
+<destructor><name><name>Foo</name><operator>::</operator>~<name>Foo</name></name><parameter_list>()</parameter_list> <block>{ }</block></destructor>";*/
+            
+            string implXml = @"<constructor><name><name>Foo</name><operator>::</operator><name>Bar</name><operator>::</operator><name>Bar</name></name><parameter_list>(<parameter><decl><type><name>float</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>float</name></type> <name>b</name></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></constructor>
+<destructor><name><name>Foo</name><operator>::</operator><name>Bar</name><operator>::</operator><name>~Bar</name></name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></destructor>
+
+<constructor><name><name>Foo</name><operator>::</operator><name>Foo</name></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>, <parameter><decl><type><name>char</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></constructor>
+<destructor><name><name>Foo</name><operator>::</operator><name>~Foo</name></name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></destructor>";
+
             var header = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(headerXml, "Foo.h");
             var implementation = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(implXml, "Foo.cpp");
 
@@ -135,11 +156,12 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestDestructorMerge_Cpp() {
             //A.h class A { ~A(); };
-            string header_xml = @"<class>class <name>A</name> <block>{<private type=""default""> <destructor_decl><name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
-";
+            /*string header_xml = @"<class>class <name>A</name> <block>{<private type=""default""> <destructor_decl><name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>";*/
+            string header_xml = @"<class>class <name>A</name> <block>{<private type=""default""> <destructor_decl><name>~A</name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>";
 
             //A.cpp A::~A() { }
-            string impl_xml = @"<destructor><name><name>A</name><op:operator>::</op:operator>~<name>A</name></name><parameter_list>()</parameter_list> <block>{ }</block></destructor>";
+            /*string impl_xml = @"<destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <block>{ }</block></destructor>";*/
+            string impl_xml = @"<destructor><name><name>A</name><operator>::</operator><name>~A</name></name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></destructor>";
 
             var header = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(header_xml, "A.h");
             var implementation = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(impl_xml, "A.cpp");
@@ -166,12 +188,14 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestMethodDefinitionMerge_Cpp() {
             // # A.h class A { int Foo(); };
-            string header_xml = @"<class>class <name>A</name> <block>{<private type=""default"">
+            /*string header_xml = @"<class>class <name>A</name> <block>{<private type=""default"">
     <function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl>
-</private>}</block>;</class>";
+</private>}</block>;</class>";*/
+            string header_xml = @"<class>class <name>A</name> <block>{<private type=""default""> <function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl> </private>}</block>;</class>";
 
             // # A.cpp int A::Foo() { int bar = 1; return bar; }
-            string impl_xml = @"<function><type><name>int</name></type> <name><name>A</name><op:operator>::</op:operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>bar</name> <init>= <expr><lit:literal type=""number"">1</lit:literal></expr></init></decl>;</decl_stmt> <return>return <expr><name>bar</name></expr>;</return> }</block></function>";
+            /*string impl_xml = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{ <decl_stmt><decl><type><name>int</name></type> <name>bar</name> <init>= <expr><literal type=""number"">1</literal></expr></init></decl>;</decl_stmt> <return>return <expr><name>bar</name></expr>;</return> }</block></function>";*/
+            string impl_xml = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{<block_content> <decl_stmt><decl><type><name>int</name></type> <name>bar</name> <init>= <expr><literal type=""number"">1</literal></expr></init></decl>;</decl_stmt> <return>return <expr><name>bar</name></expr>;</return> </block_content>}</block></function>";
 
             var header = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(header_xml, "A.h");
             var implementation = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(impl_xml, "A.cpp");
@@ -200,13 +224,17 @@ namespace ABB.SrcML.Data.Test {
         public void TestMethodDefinitionMerge_NoParameterName() {
             ////Foo.h
             //int Foo(char);
-            string declXml = "<function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>(<param><decl><type><name>char</name></type></decl></param>)</parameter_list>;</function_decl>";
+            /*string declXml = "<function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>(<parameter><decl><type><name>char</name></type></decl></parameter>)</parameter_list>;</function_decl>";*/
+            string declXml = @"<function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>(<parameter><decl><type><name>char</name></type></decl></parameter>)</parameter_list>;</function_decl>";
+
             var fileunitDecl = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(declXml, "Foo.h");
             var declarationScope = CodeParser[Language.CPlusPlus].ParseFileUnit(fileunitDecl);
 
             ////Foo.cpp
             //int Foo(char bar) { return 0; }
-            string defXml = "<function><type><name>int</name></type> <name>Foo</name><parameter_list>(<param><decl><type><name>char</name></type> <name>bar</name></decl></param>)</parameter_list> <block>{ <return>return <expr><lit:literal type=\"number\">0</lit:literal></expr>;</return> }</block></function>";
+            /*string defXml = "<function><type><name>int</name></type> <name>Foo</name><parameter_list>(<parameter><decl><type><name>char</name></type> <name>bar</name></decl></parameter>)</parameter_list> <block>{ <return>return <expr><literal type=\"number\">0</literal></expr>;</return> }</block></function>";*/
+            string defXml = @"<function><type><name>int</name></type> <name>Foo</name><parameter_list>(<parameter><decl><type><name>char</name></type> <name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>";
+            
             var fileUnitDef = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(defXml, "Foo.cpp");
 
             var globalScope = new NamespaceDefinition();
@@ -230,14 +258,18 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateMethodDefinition_TwoUnresolvedParents() {
             // # B.h namespace A { class B { }; }
-            string xmlh = @"<namespace>namespace <name>A</name> <block>{
+            /*string xmlh = @"<namespace>namespace <name>A</name> <block>{
     <class>class <name>B</name> <block>{<private type=""default"">
     </private>}</block>;</class>
-}</block></namespace>";
+}</block></namespace>";*/
+
+            string xmlh = @"<namespace>namespace <name>A</name> <block>{ <class>class <name>B</name> <block>{<private type=""default""> </private>}</block>;</class> }</block></namespace>";
 
             // # B.cpp int A::B::Foo() { return 0; }
-            string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><op:operator>::</op:operator><name>B</name><op:operator>::</op:operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{
-}</block></function>";
+            /*string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{
+}</block></function>";*/
+
+            string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>";
 
             var xmlHeader = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(xmlh, "B.h");
             var xmlImpl = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(xmlcpp, "B.cpp");
@@ -260,7 +292,7 @@ namespace ABB.SrcML.Data.Test {
 
             var methodFoo = typeB.ChildStatements.First() as MethodDefinition;
             Assert.AreEqual("A.B.Foo", methodFoo.GetFullName());
-            Assert.AreEqual(0, methodFoo.ChildStatements.Count());
+            Assert.AreEqual(1, methodFoo.ChildStatements.Count());
             Assert.AreEqual(1, methodFoo.Locations.Count);
 
             Assert.AreSame(globalScope, namespaceA.ParentStatement);
@@ -271,12 +303,13 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestCreateMethodDefinition_TwoUnresolvedParentsWithPrototype() {
             // # B.h namespace A { class B { int Foo(); }; }
-            string xmlh = @"<namespace>namespace <name>A</name> <block>{ <class>class <name>B</name> <block>{<private type=""default""> <function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl> </private>}</block>;</class> }</block></namespace>
-";
+            /*string xmlh = @"<namespace>namespace <name>A</name> <block>{ <class>class <name>B</name> <block>{<private type=""default""> <function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl> </private>}</block>;</class> }</block></namespace>";*/
+            string xmlh = @"<namespace>namespace <name>A</name> <block>{ <class>class <name>B</name> <block>{<private type=""default""> <function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl> </private>}</block>;</class> }</block></namespace>";
 
             // # B.cpp int A::B::Foo() { return 0; }
-            string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><op:operator>::</op:operator><name>B</name><op:operator>::</op:operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{
-}</block></function>";
+            /*string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{
+}</block></function>";*/
+            string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>B</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>";
 
             var xmlHeader = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(xmlh, "B.h");
             var xmlImpl = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(xmlcpp, "B.cpp");
@@ -299,7 +332,7 @@ namespace ABB.SrcML.Data.Test {
 
             var methodFoo = typeB.ChildStatements.First() as MethodDefinition;
             Assert.AreEqual("A.B.Foo", methodFoo.GetFullName());
-            Assert.AreEqual(0, methodFoo.ChildStatements.Count());
+            Assert.AreEqual(1, methodFoo.ChildStatements.Count());
             Assert.AreEqual(2, methodFoo.Locations.Count);
 
             Assert.AreSame(globalScope, namespaceA.ParentStatement);
@@ -310,13 +343,17 @@ namespace ABB.SrcML.Data.Test {
         public void TestMethodDefinitionMerge_NoParameters() {
             ////Foo.h
             //int Foo();
-            string declXml = "<function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl>";
+            /*string declXml = "<function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl>";*/
+            string declXml = @"<function_decl><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl>";
+
             var fileunitDecl = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(declXml, "Foo.h");
             var declarationScope = CodeParser[Language.CPlusPlus].ParseFileUnit(fileunitDecl);
 
             ////Foo.cpp
             //int Foo() { return 0; }
-            string defXml = @"<function><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return> }</block></function>";
+            /*string defXml = @"<function><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=""number"">0</literal></expr>;</return> }</block></function>";*/
+            string defXml = @"<function><type><name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>";
+
             var fileUnitDef = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(defXml, "Foo.cpp");
             var definitionScope = CodeParser[Language.CPlusPlus].ParseFileUnit(fileUnitDef);
 
@@ -330,27 +367,31 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestNamespaceMerge_Cpp() {
             // # D.h namespace A { namespace B { namespace C { class D { }; } } }
-            string d_xml = @"<namespace>namespace <name>A</name> <block>{
+            /*string d_xml = @"<namespace>namespace <name>A</name> <block>{
     <namespace>namespace <name>B</name> <block>{
         <namespace>namespace <name>C</name> <block>{
              <class>class <name>D</name> <block>{<private type=""default""> </private>}</block>;</class>
          }</block></namespace>
     }</block></namespace>
-}</block></namespace>";
+}</block></namespace>";*/
+            string d_xml = @"<namespace>namespace <name>A</name> <block>{ <namespace>namespace <name>B</name> <block>{ <namespace>namespace <name>C</name> <block>{ <class>class <name>D</name> <block>{<private type=""default""> </private>}</block>;</class> }</block></namespace> }</block></namespace> }</block></namespace>";
 
             // # E.h namespace A { namespace B { namespace C { class E { }; } } }
-            string e_xml = @"<namespace>namespace <name>A</name> <block>{
+            /*string e_xml = @"<namespace>namespace <name>A</name> <block>{
     <namespace>namespace <name>B</name> <block>{
         <namespace>namespace <name>C</name> <block>{
              <class>class <name>E</name> <block>{<private type=""default""> </private>}</block>;</class>
          }</block></namespace>
     }</block></namespace>
-}</block></namespace>";
+}</block></namespace>";*/
+            string e_xml = @"<namespace>namespace <name>A</name> <block>{ <namespace>namespace <name>B</name> <block>{ <namespace>namespace <name>C</name> <block>{ <class>class <name>E</name> <block>{<private type=""default""> </private>}</block>;</class> }</block></namespace> }</block></namespace> }</block></namespace>";
 
             // # F.h namespace D { class F { }; }
-            string f_xml = @"<namespace>namespace <name>D</name> <block>{
+            /*string f_xml = @"<namespace>namespace <name>D</name> <block>{
     <class>class <name>F</name> <block>{<private type=""default""> </private>}</block>;</class>
-}</block></namespace>";
+}</block></namespace>";*/
+
+            string f_xml = @"<namespace>namespace <name>D</name> <block>{ <class>class <name>F</name> <block>{<private type=""default""> </private>}</block>;</class> }</block></namespace>";
 
             var fileUnitD = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(d_xml, "D.h");
             var fileUnitE = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(e_xml, "E.h");
@@ -398,13 +439,16 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestNamespaceMerge_Java() {
             // # D.java package A.B.C; class D { public void Foo() { } }
-            string d_xml = @"<package>package <name><name>A</name><op:operator>.</op:operator><name>B</name><op:operator>.</op:operator><name>C</name></name>;</package> <class>class <name>D</name> <block>{ <function><type><specifier>public</specifier> <name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ }</block></function> }</block></class>";
+            /*string d_xml = @"<package>package <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name>;</package> <class>class <name>D</name> <block>{ <function><type><specifier>public</specifier> <name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ }</block></function> }</block></class>";*/
+            string d_xml = @"<package>package <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name>;</package> <class>class <name>D</name> <block>{ <function><type><specifier>public</specifier> <name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function> }</block></class>";
 
             // # E.java package A.B.C; class E { public void Bar() { } }
-            string e_xml = @"<package>package <name><name>A</name><op:operator>.</op:operator><name>B</name><op:operator>.</op:operator><name>C</name></name>;</package> <class>class <name>E</name> <block>{ <function><type><specifier>public</specifier> <name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{ }</block></function> }</block></class>";
+            /*string e_xml = @"<package>package <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name>;</package> <class>class <name>E</name> <block>{ <function><type><specifier>public</specifier> <name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{ }</block></function> }</block></class>";*/
+            string e_xml = @"<package>package <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name>;</package> <class>class <name>E</name> <block>{ <function><type><specifier>public</specifier> <name>void</name></type> <name>Bar</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function> }</block></class>";
 
             // # F.java package D; class F { public void Oof() { } }
-            string f_xml = @"<package>package <name>D</name>;</package> <class>class <name>F</name> <block>{ <function><type><specifier>public</specifier> <name>void</name></type> <name>Oof</name><parameter_list>()</parameter_list> <block>{ }</block></function> }</block></class>";
+            /*string f_xml = @"<package>package <name>D</name>;</package> <class>class <name>F</name> <block>{ <function><type><specifier>public</specifier> <name>void</name></type> <name>Oof</name><parameter_list>()</parameter_list> <block>{ }</block></function> }</block></class>";*/
+            string f_xml = @"<package>package <name>D</name>;</package> <class>class <name>F</name> <block>{ <function><type><specifier>public</specifier> <name>void</name></type> <name>Oof</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function> }</block></class>";
 
             var fileUnitD = FileUnitSetup[Language.Java].GetFileUnitForXmlSnippet(d_xml, "D.java");
             var fileUnitE = FileUnitSetup[Language.Java].GetFileUnitForXmlSnippet(e_xml, "E.java");
@@ -448,13 +492,17 @@ namespace ABB.SrcML.Data.Test {
         public void TestMethodDefinitionMerge_DifferentPrefixes() {
             ////A.cpp
             // int A::Foo() { return 0; }
-            string aCpp = @"<function><type><name>int</name></type> <name><name>A</name><op:operator>::</op:operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{ <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return> }</block></function>";
+            /*string aCpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=""number"">0</literal></expr>;</return> }</block></function>";*/
+            string aCpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>";
+            
             var fileUnitA = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(aCpp, "A.cpp");
             var aScope = CodeParser[Language.CPlusPlus].ParseFileUnit(fileUnitA);
 
             ////B.cpp
             // int B::Foo() { return 1; }
-            string bCpp = @"<function><type><name>int</name></type> <name><name>B</name><op:operator>::</op:operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{ <return>return <expr><lit:literal type=""number"">1</lit:literal></expr>;</return> }</block></function>";
+            /*string bCpp = @"<function><type><name>int</name></type> <name><name>B</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=""number"">1</literal></expr>;</return> }</block></function>";*/
+            string bCpp = @"<function><type><name>int</name></type> <name><name>B</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">1</literal></expr>;</return> </block_content>}</block></function>";
+            
             var fileUnitB = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(bCpp, "B.cpp");
             var bScope = CodeParser[Language.CPlusPlus].ParseFileUnit(fileUnitB);
 
@@ -470,11 +518,17 @@ namespace ABB.SrcML.Data.Test {
             //        return 0;
             //    }
             //}
-            string a1Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
+            /*string a1Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
     <function><type><specifier>public</specifier> <name>int</name></type> <name>Execute</name><parameter_list>()</parameter_list> <block>{
-        <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return>
+        <return>return <expr><literal type=""number"">0</literal></expr>;</return>
     }</block></function>
+}</block></class>";*/
+            string a1Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
+    <function><type><specifier>public</specifier> <name>int</name></type> <name>Execute</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><literal type=""number"">0</literal></expr>;</return>
+    </block_content>}</block></function>
 }</block></class>";
+
             var a1FileUnit = FileUnitSetup[Language.CSharp].GetFileUnitForXmlSnippet(a1Xml, "A1.cs");
             var globalScope = CodeParser[Language.CSharp].ParseFileUnit(a1FileUnit);
             ////A2.cs
@@ -483,11 +537,17 @@ namespace ABB.SrcML.Data.Test {
             //        return true;
             //    }
             //}
-            string a2Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
+            /*string a2Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
     <function><type><specifier>private</specifier> <name>bool</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{
-        <return>return <expr><lit:literal type=""boolean"">true</lit:literal></expr>;</return>
+        <return>return <expr><literal type=""boolean"">true</literal></expr>;</return>
     }</block></function>
+}</block></class>";*/
+            string a2Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
+    <function><type><specifier>private</specifier> <name>bool</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><literal type=""boolean"">true</literal></expr>;</return>
+    </block_content>}</block></function>
 }</block></class>";
+
             var a2FileUnit = FileUnitSetup[Language.CSharp].GetFileUnitForXmlSnippet(a2Xml, "A2.cs");
             globalScope = globalScope.Merge(CodeParser[Language.CSharp].ParseFileUnit(a2FileUnit));
 
@@ -505,18 +565,26 @@ namespace ABB.SrcML.Data.Test {
             //public partial class A {
             //    public partial int Foo();
             //}
+            /*string a1Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
+    <function_decl><type><specifier>public</specifier> <specifier>partial</specifier> <name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl>
+}</block></class>";*/
             string a1Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
     <function_decl><type><specifier>public</specifier> <specifier>partial</specifier> <name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list>;</function_decl>
 }</block></class>";
+
             var a1FileUnit = FileUnitSetup[Language.CSharp].GetFileUnitForXmlSnippet(a1Xml, "A1.cs");
             var globalScope = CodeParser[Language.CSharp].ParseFileUnit(a1FileUnit);
             ////A2.cs
             //public partial class A {
             //    public partial int Foo() { return 42; }
             //}
+            /*string a2Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
+    <function><type><specifier>public</specifier> <specifier>partial</specifier> <name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type=""number"">42</literal></expr>;</return> }</block></function>
+}</block></class>";*/
             string a2Xml = @"<class><specifier>public</specifier> <specifier>partial</specifier> class <name>A</name> <block>{
-    <function><type><specifier>public</specifier> <specifier>partial</specifier> <name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><lit:literal type=""number"">42</lit:literal></expr>;</return> }</block></function>
+    <function><type><specifier>public</specifier> <specifier>partial</specifier> <name>int</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">42</literal></expr>;</return> </block_content>}</block></function>
 }</block></class>";
+
             var a2FileUnit = FileUnitSetup[Language.CSharp].GetFileUnitForXmlSnippet(a2Xml, "A2.cs");
             globalScope = globalScope.Merge(CodeParser[Language.CSharp].ParseFileUnit(a2FileUnit));
 
@@ -534,17 +602,21 @@ namespace ABB.SrcML.Data.Test {
             // # A.cpp int A::Foo() { return 0; }
             //
             // int A::Bar() { return 0; }
-            string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><op:operator>::</op:operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{
-     <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return>
+            /*string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{
+     <return>return <expr><literal type=""number"">0</literal></expr>;</return>
 }</block></function>
 
-<function><type><name>int</name></type> <name><name>A</name><op:operator>::</op:operator><name>Bar</name></name><parameter_list>()</parameter_list> <block>{
-     <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return>
-}</block></function>";
+<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Bar</name></name><parameter_list>()</parameter_list> <block>{
+     <return>return <expr><literal type=""number"">0</literal></expr>;</return>
+}</block></function>";*/
+            string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>
+
+ <function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Bar</name></name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>";
 
             // # A.h class A { };
-            string xmlh = @"<class>class <name>A</name> <block>{<private type=""default"">
-</private>}</block>;</class>";
+            /*string xmlh = @"<class>class <name>A</name> <block>{<private type=""default"">
+</private>}</block>;</class>";*/
+            string xmlh = @"<class>class <name>A</name> <block>{<private type=""default""> </private>}</block>;</class>";
 
             var xmlImpl = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(xmlcpp, "A.cpp");
             var xmlHeader = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(xmlh, "A.h");
@@ -580,17 +652,23 @@ namespace ABB.SrcML.Data.Test {
             // # A.cpp int A::Foo() { return 0; }
             //
             // int A::Bar() { return 0; }
-            string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><op:operator>::</op:operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{
-     <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return>
+            /*string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{
+     <return>return <expr><literal type=""number"">0</literal></expr>;</return>
 }</block></function>
 
-<function><type><name>int</name></type> <name><name>A</name><op:operator>::</op:operator><name>Bar</name></name><parameter_list>()</parameter_list> <block>{
-     <return>return <expr><lit:literal type=""number"">0</lit:literal></expr>;</return>
-}</block></function>";
+<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Bar</name></name><parameter_list>()</parameter_list> <block>{
+     <return>return <expr><literal type=""number"">0</literal></expr>;</return>
+}</block></function>";*/
+
+            string xmlcpp = @"<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Foo</name></name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>
+
+<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>Bar</name></name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type=""number"">0</literal></expr>;</return> </block_content>}</block></function>";
 
             // # A.h class A { };
-            string xmlh = @"<class>class <name>A</name> <block>{<private type=""default"">
-</private>}</block>;</class>";
+            /*string xmlh = @"<class>class <name>A</name> <block>{<private type=""default"">
+</private>}</block>;</class>";*/
+            string xmlh = @"<class>class <name>A</name> <block>{<private type=""default""> </private>}</block>;</class>";
+
 
             var xmlImpl = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(xmlcpp, "A.cpp");
             var xmlHeader = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(xmlh, "A.h");

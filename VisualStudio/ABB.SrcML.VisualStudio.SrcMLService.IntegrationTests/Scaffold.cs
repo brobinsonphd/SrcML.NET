@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
+//using Microsoft.VSSDK.Tools.VsIdeTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;

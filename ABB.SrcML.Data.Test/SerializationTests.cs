@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace ABB.SrcML.Data.Test {
     [TestFixture(Category="Build")]
     public class SerializationTests {
-        private const string TestInputPath = @"..\..\TestInputs";
+        private const string TestInputPath = @"c:\SrcML\TestInputs";
         private const string DefaultInputName = "serializationtest_input.xml";
         private const string DefaultOutputName = "serializationtest_output";
         [SetUp]

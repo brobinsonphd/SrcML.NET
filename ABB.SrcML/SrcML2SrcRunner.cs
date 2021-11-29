@@ -28,7 +28,7 @@ namespace ABB.SrcML
         /// <summary>
         /// The srcml2src executable name
         /// </summary>
-        public const string SrcML2SrcExecutableName = "srcml2src.exe";
+        public const string SrcML2SrcExecutableName = "srcml.exe";
 
         #region Constructors
         /// <summary>

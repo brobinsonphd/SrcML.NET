@@ -41,7 +41,7 @@ namespace ABB.SrcML.Test.Utilities {
                     }
                 }
             }
-            return string.Format("<unit {0} filename=\"{{2}}\" language=\"{{1}}\">{{0}}</unit>", namespaceDecls.ToString());
+            return string.Format("<unit {0} revision=\"1.0.0\" language=\"{{1}}\" filename=\"{{2}}\">{{0}}</unit>", namespaceDecls.ToString());
         }
 
         public XElement GetFileUnitForXmlSnippet(string xmlSnippet, string fileName) {

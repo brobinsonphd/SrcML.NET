@@ -46,11 +46,11 @@ namespace ABB.SrcML.Test {
 
         [Test]
         public void TestGetMethodSignature_Normal() {
-            string testSrcML = @"<function><type><name>char</name><type:modifier>*</type:modifier></type> <name><name>MyClass</name><op:operator>::</op:operator><name>foo</name></name><parameter_list>(<param><decl><type><name>int</name></type> <name>bar</name></decl></param>)</parameter_list> <block>{
-    <if>if<condition>(<expr><name>bar</name> <op:operator>&gt;</op:operator> <call><name>GetNumber</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
-        <return>return <expr><lit:literal type=""string"">""Hello, world!""</lit:literal></expr>;</return>
+            string testSrcML = @"<function><type><name>char</name><type:modifier>*</type:modifier></type> <name><name>MyClass</name><operator>::</operator><name>foo</name></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>bar</name></decl></parameter>)</parameter_list> <block>{
+    <if>if<condition>(<expr><name>bar</name> <operator>&gt;</operator> <call><name>GetNumber</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><literal type=""string"">""Hello, world!""</literal></expr>;</return>
     }</block></then> <else>else <block>{
-        <return>return <expr><lit:literal type=""string"">""Goodbye cruel world!""</lit:literal></expr>;</return>
+        <return>return <expr><literal type=""string"">""Goodbye cruel world!""</literal></expr>;</return>
     }</block></else></if>
 }</block></function>";
             XElement xml = XElement.Parse(string.Format(srcMLFormat, testSrcML), LoadOptions.PreserveWhitespace);
@@ -62,15 +62,15 @@ namespace ABB.SrcML.Test {
 
         [Test]
         public void TestGetMethodSignature_Whitespace() {
-            string testSrcML = @"<function><type><name>char</name><type:modifier>*</type:modifier></type> <name><name>MyClass</name><op:operator>::</op:operator><name>foo</name></name><parameter_list>(
-	<param><decl><type><name>int</name></type> <name>bar</name></decl></param>,
-	<param><decl><type><name>int</name></type> <name>baz</name></decl></param>,
-	<param><decl><type><name>float</name></type> <name>xyzzy</name></decl></param>)</parameter_list> 
+            string testSrcML = @"<function><type><name>char</name><type:modifier>*</type:modifier></type> <name><name>MyClass</name><operator>::</operator><name>foo</name></name><parameter_list>(
+	<parameter><decl><type><name>int</name></type> <name>bar</name></decl></parameter>,
+	<parameter><decl><type><name>int</name></type> <name>baz</name></decl></parameter>,
+	<parameter><decl><type><name>float</name></type> <name>xyzzy</name></decl></parameter>)</parameter_list> 
 <block>{
-    <if>if<condition>(<expr><name>bar</name> <op:operator>&gt;</op:operator> <call><name>GetNumber</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
-        <return>return <expr><lit:literal type=""string"">""Hello, world!""</lit:literal></expr>;</return>
+    <if>if<condition>(<expr><name>bar</name> <operator>&gt;</operator> <call><name>GetNumber</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><literal type=""string"">""Hello, world!""</literal></expr>;</return>
     }</block></then> <else>else <block>{
-        <return>return <expr><lit:literal type=""string"">""Goodbye cruel world!""</lit:literal></expr>;</return>
+        <return>return <expr><literal type=""string"">""Goodbye cruel world!""</literal></expr>;</return>
     }</block></else></if>
 }</block></function>";
             XElement xml = XElement.Parse(string.Format(srcMLFormat, testSrcML), LoadOptions.PreserveWhitespace);
@@ -82,11 +82,11 @@ namespace ABB.SrcML.Test {
 
         [Test]
         public void TestGetMethodSignature_InitializerList() {
-            string testSrcML = @"<constructor><name><name>MyClass</name><op:operator>::</op:operator><name>MyClass</name></name><parameter_list>(<param><decl><type><name>int</name></type> <name>bar</name></decl></param>)</parameter_list> <member_list>: <call><name>_capacity</name><argument_list>(<argument><expr><lit:literal type=""number"">15</lit:literal></expr></argument>)</argument_list></call>, <call><name>_len</name><argument_list>(<argument><expr><lit:literal type=""number"">0</lit:literal></expr></argument>)</argument_list></call> </member_list><block>{
-    <if>if<condition>(<expr><name>bar</name> <op:operator>&gt;</op:operator> <call><name>GetNumber</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
-        <return>return <expr><lit:literal type=""string"">""Hello, world!""</lit:literal></expr>;</return>
+            string testSrcML = @"<constructor><name><name>MyClass</name><operator>::</operator><name>MyClass</name></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>bar</name></decl></parameter>)</parameter_list> <member_list>: <call><name>_capacity</name><argument_list>(<argument><expr><literal type=""number"">15</literal></expr></argument>)</argument_list></call>, <call><name>_len</name><argument_list>(<argument><expr><literal type=""number"">0</literal></expr></argument>)</argument_list></call> </member_list><block>{
+    <if>if<condition>(<expr><name>bar</name> <operator>&gt;</operator> <call><name>GetNumber</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+        <return>return <expr><literal type=""string"">""Hello, world!""</literal></expr>;</return>
     }</block></then> <else>else <block>{
-        <return>return <expr><lit:literal type=""string"">""Goodbye cruel world!""</lit:literal></expr>;</return>
+        <return>return <expr><literal type=""string"">""Goodbye cruel world!""</literal></expr>;</return>
     }</block></else></if>
 }</block></constructor>";
             XElement xml = XElement.Parse(string.Format(srcMLFormat, testSrcML), LoadOptions.PreserveWhitespace);
@@ -99,7 +99,7 @@ namespace ABB.SrcML.Test {
         [Test]
         public void TestGetLanguageForUnit_ValidLanguage() {
             string testXml = @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>
-<unit xmlns=""http://www.sdml.info/srcML/src"" language=""C++"" filename=""test.cpp""><expr_stmt><expr></expr></expr_stmt>
+<unit xmlns=""http://www.srcML.org/srcML/src"" language=""C++"" filename=""test.cpp""><expr_stmt><expr></expr></expr_stmt>
 </unit>";
 
             XElement fileUnit = XElement.Parse(testXml);
@@ -110,7 +110,7 @@ namespace ABB.SrcML.Test {
         [Test]
         public void TestGetLanguageForUnit_NoLanguage() {
             string testXml = @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>
-<unit xmlns=""http://www.sdml.info/srcML/src"" filename=""test.cpp""><expr_stmt><expr></expr></expr_stmt>
+<unit xmlns=""http://www.srcML.org/srcML/src"" filename=""test.cpp""><expr_stmt><expr></expr></expr_stmt>
 </unit>";
 
             XElement fileUnit = XElement.Parse(testXml);
@@ -121,7 +121,7 @@ namespace ABB.SrcML.Test {
         [Test]
         public void TestGetLanguageForUnit_InvalidLanguage() {
             string testXml = @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>
-<unit xmlns=""http://www.sdml.info/srcML/src"" language=""C+"" filename=""test.cpp""><expr_stmt><expr></expr></expr_stmt>
+<unit xmlns=""http://www.srcML.org/srcML/src"" language=""C+"" filename=""test.cpp""><expr_stmt><expr></expr></expr_stmt>
 </unit>";
 
             XElement fileUnit = XElement.Parse(testXml);

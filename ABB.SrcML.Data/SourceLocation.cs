@@ -37,14 +37,14 @@ namespace ABB.SrcML.Data {
 
         /// <summary>XML name for the ending column number</summary>
         public const string XmlEndingColumnAttributeName = "ec";
-
+       
         /// <summary>
         /// Creates a new source location object
         /// </summary>
         /// <param name="fileName">The file name</param>
         /// <param name="startingLineNumber">The starting line number.</param>
         /// <param name="startingColumnNumber">The starting column within
-        /// <paramref name="startingLineNumber"/></param>
+        /// <paramref name="startingLineNumber"/></param>        
         public SourceLocation(string fileName, int startingLineNumber, int startingColumnNumber)
             : this(fileName, startingLineNumber, startingColumnNumber, startingLineNumber, startingColumnNumber) { }
 

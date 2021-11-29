@@ -70,7 +70,7 @@ namespace ABB.SrcML.Test
         [Test]
         public void FileWithBom()
         {
-            var srcmlObject = new ABB.SrcML.SrcML(Path.Combine(".", "SrcML"));
+            var srcmlObject = new ABB.SrcML.SrcML(Environment.GetEnvironmentVariable("SRCMLBINDIR"));
 
             var doc = srcmlObject.GenerateSrcMLFromFile("external\\fileWithBom.cpp", "external_xml\\fileWithBom.xml");
         }
@@ -78,7 +78,7 @@ namespace ABB.SrcML.Test
         [Test]
         public void JavaClassWithConstructor()
         {
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var srcmlObject = new Src2SrcMLRunner(Environment.GetEnvironmentVariable("SRCMLBINDIR"));
 
             var doc = srcmlObject.GenerateSrcMLFromFile("external\\ClassWithConstructor.java", "external_xml\\ClassWithConstructor.java.xml");
             XElement classBlock = null;
@@ -91,15 +91,16 @@ namespace ABB.SrcML.Test
         [Test]
         public void DeclStmtWithTwoDecl()
         {
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var srcmlObject = new Src2SrcMLRunner();
             var source = "int x = 0, y = 2;";
 
             var xml = srcmlObject.GenerateSrcMLFromString(source);
             var element = XElement.Parse(xml);
 
-            var decl = element.Element(SRC.DeclarationStatement).Element(SRC.Declaration);
-            var nameCount = decl.Elements(SRC.Name).Count();
-            var initCount = decl.Elements(SRC.Init).Count();
+            var decl = element.Element(SRC.DeclarationStatement);
+            //var decl = element.Element("decl_stmt").Element("decl");
+            var nameCount = decl.Elements(SRC.Declaration).Elements(SRC.Name).Count();
+            var initCount = decl.Elements(SRC.Declaration).Elements(SRC.Init).Count();
             Assert.AreEqual(2, nameCount, srcmlObject.ApplicationDirectory);
             Assert.AreEqual(2, initCount, srcmlObject.ApplicationDirectory);
         }
@@ -107,7 +108,7 @@ namespace ABB.SrcML.Test
         [Test]
         public void FunctionWithElseInCpp()
         {
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var srcmlObject = new Src2SrcMLRunner();
 
             var doc = srcmlObject.GenerateSrcMLFromFile("external\\cpp_parsing_error.c", "external_xml\\cpp_parsing_error.c.xml");
 
@@ -117,7 +118,7 @@ namespace ABB.SrcML.Test
         [Test]
         public void MacroWithoutSemicolon()
         {
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var srcmlObject = new Src2SrcMLRunner();
 
             var doc = srcmlObject.GenerateSrcMLFromFile("external\\MacroWithoutSemicolon.cpp", "external_xml\\MacroWithoutSemicolon.cpp.xml");
 
@@ -127,7 +128,7 @@ namespace ABB.SrcML.Test
         [Test]
         public void DestructorWithIfStatement()
         {
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var srcmlObject = new Src2SrcMLRunner();
 
             var doc = srcmlObject.GenerateSrcMLFromFile("external\\DestructorWithIfStatement.cpp", "external_xml\\DestructorWithIfStatement.cpp.xml");
 
@@ -137,11 +138,11 @@ namespace ABB.SrcML.Test
         [Test]
         public void MethodWithFunctionPointerAsParameter()
         {
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var srcmlObject = new Src2SrcMLRunner();
 
-            var doc = srcmlObject.GenerateSrcMLFromFile("external\\MethodWithFunctionPointerParameters.cpp", "external_xml\\MethodWithFunctionPointerParameters.cpp.xml");
+            var doc = srcmlObject.GenerateSrcMLFromFile("external\\MethodWithFunctionPointerParameters.cpp", "external_xml\\MethodWithFunctionPointerParameters.cpp.xml");          
 
-            Assert.AreEqual(2, doc.FileUnits.First().Element(SRC.Function).Element(SRC.ParameterList).Elements(SRC.Parameter).Count());
+            Assert.AreEqual(2, doc.FileUnits.First().Element(SRC.Function).Element(SRC.ParameterList).Elements(SRC.Parameter).Count());           
         }
 
         [Test]
@@ -188,7 +189,7 @@ namespace ABB.SrcML.Test
             Assert.IsNotNull(method);
             var methodBlock = method.Element(SRC.Block);
             Assert.IsNotNull(methodBlock);
-            Assert.AreEqual(1, methodBlock.Elements(SRC.ExpressionStatement).Count());
+            Assert.AreEqual(1, methodBlock.Elements(SRC.BlockContent).Elements(SRC.ExpressionStatement).Count());
         }
 
         [Test]
@@ -201,7 +202,7 @@ namespace ABB.SrcML.Test
             Assert.IsNotNull(method);
             var methodBlock = method.Element(SRC.Block);
             Assert.IsNotNull(methodBlock);
-            Assert.AreEqual(1, methodBlock.Elements(SRC.ExpressionStatement).Count());
+            Assert.AreEqual(1, methodBlock.Elements(SRC.BlockContent).Elements(SRC.ExpressionStatement).Count());
         }
 
         [Test]
@@ -214,7 +215,7 @@ namespace ABB.SrcML.Test
             Assert.IsNotNull(method);
             var methodBlock = method.Element(SRC.Block);
             Assert.IsNotNull(methodBlock);
-            Assert.AreEqual(1, methodBlock.Elements(SRC.ExpressionStatement).Count());
+            Assert.AreEqual(1, methodBlock.Elements(SRC.BlockContent).Elements(SRC.ExpressionStatement).Count());
         }
 
         [Test]
@@ -227,7 +228,7 @@ namespace ABB.SrcML.Test
             Assert.IsNotNull(method);
             var methodBlock = method.Element(SRC.Block);
             Assert.IsNotNull(methodBlock);
-            Assert.AreEqual(1, methodBlock.Elements(SRC.ExpressionStatement).Count());
+            Assert.AreEqual(1, methodBlock.Elements(SRC.BlockContent).Elements(SRC.ExpressionStatement).Count());
         }
 
         [Test]
@@ -236,10 +237,10 @@ namespace ABB.SrcML.Test
             generator.GenerateSrcMLFromFile("external\\TestCSharpUsingStatement.cs", "external_xml\\TestCSharpUsingStatement.cs.xml");
             var fileUnit = SrcMLElement.Load("external_xml\\TestCSharpUsingStatement.cs.xml");
 
-            var usingBlock = fileUnit.Elements(SRC.Using).FirstOrDefault();
+            var usingBlock = fileUnit.Elements(SRC.UsingStatement).FirstOrDefault();
             Assert.IsNotNull(usingBlock);
 
-            Assert.AreEqual(1, usingBlock.Elements(SRC.Declaration).Count());
+            Assert.AreEqual(1, usingBlock.Elements(SRC.Init).Elements(SRC.Declaration).Count());
             Assert.AreEqual(1, usingBlock.Elements(SRC.Block).Count());
         }
     }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D4CB6CC1-0630-4FCA-BD07-C7E3DEF24AD6}"
 	ProjectSection(SolutionItems) = preProject
@@ -49,19 +49,38 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB.SrcML.Data", "ABB.SrcML
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB.SrcML.VisualStudio", "VisualStudio\ABB.SrcML.VisualStudio.SrcMLService\ABB.SrcML.VisualStudio.csproj", "{C3FC3845-B74F-498E-A8E5-80F5AE013DA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB.SrcML.VisualStudio.SrcMLService.IntegrationTests", "VisualStudio\ABB.SrcML.VisualStudio.SrcMLService.IntegrationTests\ABB.SrcML.VisualStudio.SrcMLService.IntegrationTests.csproj", "{A1D86129-0342-4D94-8329-5F46FB75E92A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB.SrcML.VisualStudio.SrcMLService.UnitTests", "VisualStudio\ABB.SrcML.VisualStudio.SrcMLService.UnitTests\ABB.SrcML.VisualStudio.SrcMLService.UnitTests.csproj", "{4B2A4172-94E9-4544-9170-912F8C84FFD4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB.SrcML.Tools.DataTester", "Tools\ABB.SrcML.Tools.DataTester\ABB.SrcML.Tools.DataTester.csproj", "{B2FD5071-9B3B-4DE5-A1D2-3233989DEF77}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "ProgramTransformationSetup", "VisualStudio\ProgramTransformationSetup\ProgramTransformationSetup.wixproj", "{CA38430C-390A-4B09-8A29-37C57C418F1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB.SrcML.Test.Utilities", "ABB.SrcML.Test.Utilities\ABB.SrcML.Test.Utilities.csproj", "{46A346F2-679E-4EED-94A5-1A36BA56C2EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB.SrcML.Tools.MethodCallSurvey", "Tools\ABB.SrcML.Tools.MethodCallSurvey\ABB.SrcML.Tools.MethodCallSurvey.csproj", "{4D1DE8A4-0C55-49E2-AF37-3B47A8A447B2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB.SrcML.Data.Test", "ABB.SrcML.Data.Test\ABB.SrcML.Data.Test.csproj", "{2D910B34-7FEE-44DC-B79F-00DA2A914295}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABB.SrcML.VisualStudio.SrcMLService.UnitTests", "VisualStudio\ABB.SrcML.VisualStudio.SrcMLService.UnitTests\ABB.SrcML.VisualStudio.SrcMLService.UnitTests.csproj", "{4B2A4172-94E9-4544-9170-912F8C84FFD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SrcML", "SrcML", "{574A18EC-1174-429D-AA9D-0DD22D6EB474}"
+	ProjectSection(SolutionItems) = preProject
+		..\Program Files\srcML\archive.dll = ..\Program Files\srcML\archive.dll
+		..\Program Files\srcML\boost_program_options-vc141-mt-x64-1_67.dll = ..\Program Files\srcML\boost_program_options-vc141-mt-x64-1_67.dll
+		..\Program Files\srcML\libbz2.dll = ..\Program Files\srcML\libbz2.dll
+		..\Program Files\srcML\libcharset.dll = ..\Program Files\srcML\libcharset.dll
+		..\Program Files\srcML\libcurl.dll = ..\Program Files\srcML\libcurl.dll
+		..\Program Files\srcML\libeay32.dll = ..\Program Files\srcML\libeay32.dll
+		..\Program Files\srcML\libexslt.dll = ..\Program Files\srcML\libexslt.dll
+		..\Program Files\srcML\libiconv.dll = ..\Program Files\srcML\libiconv.dll
+		..\Program Files\srcML\libsrcml.dll = ..\Program Files\srcML\libsrcml.dll
+		..\Program Files\srcML\libssh2.dll = ..\Program Files\srcML\libssh2.dll
+		..\Program Files\srcML\libxml2.dll = ..\Program Files\srcML\libxml2.dll
+		..\Program Files\srcML\libxslt.dll = ..\Program Files\srcML\libxslt.dll
+		..\Program Files\srcML\lzma.dll = ..\Program Files\srcML\lzma.dll
+		..\Program Files\srcML\srcml.exe = ..\Program Files\srcML\srcml.exe
+		..\Program Files\srcML\srcml_icon.ico = ..\Program Files\srcML\srcml_icon.ico
+		..\Program Files\srcML\ssleay32.dll = ..\Program Files\srcML\ssleay32.dll
+		..\Program Files\srcML\zlib1.dll = ..\Program Files\srcML\zlib1.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SrcML Visual Studio Transform Extension", "SrcML Visual Studio Transform Extension\SrcML Visual Studio Transform Extension.csproj", "{F3EEF00C-187F-47E0-B199-87CF0F979C7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,26 +212,6 @@ Global
 		{C3FC3845-B74F-498E-A8E5-80F5AE013DA0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C3FC3845-B74F-498E-A8E5-80F5AE013DA0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C3FC3845-B74F-498E-A8E5-80F5AE013DA0}.Release|x86.ActiveCfg = Release|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A1D86129-0342-4D94-8329-5F46FB75E92A}.Release|x86.ActiveCfg = Release|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|x86.ActiveCfg = Release|Any CPU
 		{B2FD5071-9B3B-4DE5-A1D2-3233989DEF77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B2FD5071-9B3B-4DE5-A1D2-3233989DEF77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2FD5071-9B3B-4DE5-A1D2-3233989DEF77}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -223,17 +222,6 @@ Global
 		{B2FD5071-9B3B-4DE5-A1D2-3233989DEF77}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B2FD5071-9B3B-4DE5-A1D2-3233989DEF77}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B2FD5071-9B3B-4DE5-A1D2-3233989DEF77}.Release|x86.ActiveCfg = Release|Any CPU
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Debug|x86.ActiveCfg = Debug|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Debug|x86.Build.0 = Debug|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Release|Any CPU.ActiveCfg = Release|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Release|Any CPU.Build.0 = Release|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Release|Mixed Platforms.Build.0 = Release|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Release|x86.ActiveCfg = Release|x86
-		{CA38430C-390A-4B09-8A29-37C57C418F1C}.Release|x86.Build.0 = Release|x86
 		{46A346F2-679E-4EED-94A5-1A36BA56C2EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46A346F2-679E-4EED-94A5-1A36BA56C2EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46A346F2-679E-4EED-94A5-1A36BA56C2EE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -264,6 +252,30 @@ Global
 		{2D910B34-7FEE-44DC-B79F-00DA2A914295}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2D910B34-7FEE-44DC-B79F-00DA2A914295}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2D910B34-7FEE-44DC-B79F-00DA2A914295}.Release|x86.ActiveCfg = Release|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Debug|x86.Build.0 = Debug|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|x86.ActiveCfg = Release|Any CPU
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4}.Release|x86.Build.0 = Release|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Debug|x86.Build.0 = Debug|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Release|x86.ActiveCfg = Release|Any CPU
+		{F3EEF00C-187F-47E0-B199-87CF0F979C7C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -279,11 +291,13 @@ Global
 		{273ADE66-8AF4-4736-8068-BF5C593C7F06} = {1C12F8F6-3898-4793-9D93-13E9D5614C6C}
 		{873DD65E-2C15-413D-9441-9850AC9A6B84} = {E9F6AFA3-6494-4C3E-9807-5270E91268BA}
 		{C3FC3845-B74F-498E-A8E5-80F5AE013DA0} = {E9F6AFA3-6494-4C3E-9807-5270E91268BA}
-		{A1D86129-0342-4D94-8329-5F46FB75E92A} = {E9F6AFA3-6494-4C3E-9807-5270E91268BA}
-		{4B2A4172-94E9-4544-9170-912F8C84FFD4} = {E9F6AFA3-6494-4C3E-9807-5270E91268BA}
 		{B2FD5071-9B3B-4DE5-A1D2-3233989DEF77} = {1C12F8F6-3898-4793-9D93-13E9D5614C6C}
-		{CA38430C-390A-4B09-8A29-37C57C418F1C} = {E9F6AFA3-6494-4C3E-9807-5270E91268BA}
 		{4D1DE8A4-0C55-49E2-AF37-3B47A8A447B2} = {1C12F8F6-3898-4793-9D93-13E9D5614C6C}
+		{4B2A4172-94E9-4544-9170-912F8C84FFD4} = {E9F6AFA3-6494-4C3E-9807-5270E91268BA}
+		{574A18EC-1174-429D-AA9D-0DD22D6EB474} = {E9F6AFA3-6494-4C3E-9807-5270E91268BA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9718A1BE-CA25-4A3F-ADBC-F66CC9954D0A}
 	EndGlobalSection
 	GlobalSection(CodealikeProperties) = postSolution
 		SolutionGuid = a2219e19-1b78-4c95-bf79-1a843f5eb92d

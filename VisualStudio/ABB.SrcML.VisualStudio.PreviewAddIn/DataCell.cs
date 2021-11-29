@@ -166,15 +166,9 @@ namespace ABB.SrcML.VisualStudio.PreviewAddIn
             this.Xml.AddAnnotation(new DataEnabledAnnotation());
 
             this.location = doc.RelativePath(node);
-            this.lineNumber = xe.GetSrcLineNumber();
-            if (xe.Descendants().Any())
-            {
-                this.endLineNumber = xe.Descendants().Last().GetSrcLineNumber();
-            }
-            else
-            {
-                this.endLineNumber = this.lineNumber;
-            }
+            this.lineNumber = xe.GetSrcStartLineNumber();
+            this.endLineNumber = xe.GetSrcEndingLineNumber();
+            
 
             if (null != this.Xml && null != this.Transform)
             {

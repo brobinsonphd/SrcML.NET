@@ -9,7 +9,7 @@ using ABB.SrcML.Test.Utilities;
 using ABB.VisualStudio;
 using EnvDTE;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
+//using Microsoft.VSSDK.Tools.VsIdeTesting;
 using Thread = System.Threading.Thread;
 
 namespace ABB.SrcML.VisualStudio.SrcMLService.IntegrationTests {

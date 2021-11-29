@@ -14,7 +14,6 @@ using EnvDTE80;
 using Microsoft.Win32;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
 using Microsoft.VisualStudio;
 
 namespace Microsoft.VsSDK.IntegrationTestLibrary {

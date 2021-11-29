@@ -53,68 +53,68 @@ namespace ABB.SrcML.Test
         [Test]
         public void CheckPositionNumberWithSingleUnit()
         {
-            var srcmlObject = new ABB.SrcML.SrcML(Path.Combine(".", "SrcML"));
+            var srcmlObject = new ABB.SrcML.SrcML(Environment.GetEnvironmentVariable("SRCMLBINDIR"));
 
             var doc = srcmlObject.GenerateSrcMLFromFile(@"srctest\foo.c", @"srctest_xml\singleunit_position.xml");
 
             var firstUnit = doc.FileUnits.First();
 
-            Assert.AreEqual(0, firstUnit.GetSrcLinePosition());
-            Assert.AreEqual(1, firstUnit.Descendants(SRC.Type).First().Element(SRC.Name).GetSrcLinePosition());
-            Assert.AreEqual(1, firstUnit.Element(SRC.Function).GetSrcLinePosition());
-            Assert.AreEqual(5, firstUnit.Descendants(SRC.Name).First(n => n.Value == "foo").GetSrcLinePosition());
-            Assert.AreEqual(5, firstUnit.Descendants(SRC.Name).First(n => n.Value == "printf").GetSrcLinePosition());
-            Assert.AreEqual(45, firstUnit.Descendants(SRC.Name).First(n => n.Value == "printd").GetSrcLinePosition());
+            Assert.AreEqual(0, firstUnit.GetSrcStartLinePosition());
+            Assert.AreEqual(1, firstUnit.Descendants(SRC.Type).First().Element(SRC.Name).GetSrcStartLinePosition());
+            Assert.AreEqual(1, firstUnit.Element(SRC.Function).GetSrcStartLinePosition());
+            Assert.AreEqual(5, firstUnit.Descendants(SRC.Name).First(n => n.Value == "foo").GetSrcStartLinePosition());
+            Assert.AreEqual(5, firstUnit.Descendants(SRC.Name).First(n => n.Value == "printf").GetSrcStartLinePosition());
+            Assert.AreEqual(45, firstUnit.Descendants(SRC.Name).First(n => n.Value == "printd").GetSrcStartLinePosition());
 
-            Assert.AreEqual(6, firstUnit.Descendants(SRC.Name).First(n => n.Value == "bar").GetSrcLinePosition());
-            Assert.AreEqual(10, firstUnit.Descendants(SRC.Condition).First().GetSrcLinePosition());
-            Assert.AreEqual(9, firstUnit.Descendants(SRC.Name).First(n => n.Value == "printg").GetSrcLinePosition());
+            Assert.AreEqual(6, firstUnit.Descendants(SRC.Name).First(n => n.Value == "bar").GetSrcStartLinePosition());
+            Assert.AreEqual(10, firstUnit.Descendants(SRC.Condition).First().GetSrcStartLinePosition());
+            Assert.AreEqual(9, firstUnit.Descendants(SRC.Name).First(n => n.Value == "printg").GetSrcStartLinePosition());
         }
 
         [Test]
         public void GetSrcLineNumberWithSingleUnit()
         {
-            File.WriteAllText("srctest\\singleunitlinenum.c", @"int foo() {
-printf(""hello world!"");
-}");
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            File.WriteAllText("srctest\\singleunitlinenum.c", @"int foo() { printf(""hello world!""); }");
+
+            var namespaceParamters = new[] { "--position" };
+
+            var srcmlObject = new Src2SrcMLRunner(Environment.GetEnvironmentVariable("SRCMLBINDIR"), namespaceParamters);
 
             var doc = srcmlObject.GenerateSrcMLFromFile("srctest\\singleunitlinenum.c", @"srctest_xml\singleunit_linenumber.xml");
 
             var unit = doc.FileUnits.First();
 
-            Assert.AreEqual(1, unit.GetSrcLineNumber());
-            Assert.AreEqual(1, unit.Element(SRC.Function).GetSrcLineNumber());
-            Assert.AreEqual(2, unit.Descendants(SRC.Call).First().GetSrcLineNumber());
+            Assert.AreEqual(1, unit.GetSrcStartLineNumber());
+            Assert.AreEqual(1, unit.Element(SRC.Function).GetSrcStartLineNumber());
+            Assert.AreEqual(1, unit.Descendants(SRC.Call).First().GetSrcStartLineNumber());
         }
 
         [Test]
         public void GetLineInfoWithString()
         {
-            var source = @"int foo() {
-printf(""hello world!"");
-}";
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var source = @"int foo() { printf(a); }";
+            var namespaceParamters = new[] { "--position" };
+            var srcmlObject = new Src2SrcMLRunner(Environment.GetEnvironmentVariable("SRCMLBINDIR"), namespaceParamters);
 
             var xml = srcmlObject.GenerateSrcMLFromString(source);
 
             var element = XElement.Parse(xml).Elements().First();
 
-            Assert.AreEqual(1, element.GetSrcLineNumber());
-            Assert.AreEqual(1, element.GetSrcLinePosition());
+            Assert.AreEqual(1, element.GetSrcStartLineNumber());
+            Assert.AreEqual(1, element.GetSrcStartLinePosition());
         }
 
         [Test]
         public void GetSrcLineNumberWithMultipleUnit()
         {
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var srcmlObject = new Src2SrcMLRunner(Environment.GetEnvironmentVariable("SRCMLBINDIR"));
 
             var doc = srcmlObject.GenerateSrcMLFromDirectory("srctest", "srctest_xml\\multipleunit_linenumber.xml");
             
             var firstUnit = doc.FileUnits.First();
 
-            Assert.AreEqual(1, firstUnit.Element(SRC.Function).GetSrcLineNumber());
-            Assert.AreEqual(2, firstUnit.Descendants(SRC.Call).First().GetSrcLineNumber());
+            Assert.AreEqual(1, firstUnit.Element(SRC.Function).GetSrcStartLineNumber());
+            Assert.AreEqual(2, firstUnit.Descendants(SRC.Call).First().GetSrcStartLineNumber());
         }
 
         [Test]
@@ -122,7 +122,7 @@ printf(""hello world!"");
         {
             var text = File.ReadAllText("srctest\\foo.c");
 
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var srcmlObject = new Src2SrcMLRunner(Environment.GetEnvironmentVariable("SRCMLBINDIR"));
 
             var doc = srcmlObject.GenerateSrcMLFromFile("srctest\\foo.c", "srctest_xml\\srctest_tosource.xml");
 
@@ -136,16 +136,16 @@ printf(""hello world!"");
         [Test]
         public void ParentStatementTest()
         {
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            var srcmlObject = new Src2SrcMLRunner(Environment.GetEnvironmentVariable("SRCMLBINDIR"));
 
             var doc = srcmlObject.GenerateSrcMLFromFile("srctest\\foo.c", "srctest_xml\\srctest_parentstatement.xml");
             var firstUnit = doc.FileUnits.First();
             var function = firstUnit.Element(SRC.Function);
             
-            var expression = function.Element(SRC.Block).Element(SRC.ExpressionStatement);
+            var expression = function.Element(SRC.Block).Element(SRC.BlockContent).Element(SRC.ExpressionStatement);
             var call = expression.Descendants(SRC.Call).First();
 
-            var declaration = function.Element(SRC.Block).Element(SRC.DeclarationStatement);
+            var declaration = function.Element(SRC.Block).Element(SRC.BlockContent).Element(SRC.DeclarationStatement);
             var variable = declaration.Element(SRC.Declaration).Element(SRC.Name);
 
             var unitParent = firstUnit.ParentStatement();
@@ -162,11 +162,8 @@ printf(""hello world!"");
         [Test]
         public void ContainsCallToTest()
         {
-            string source = @"int foo() {
-    printf(""hello world!"");
-    int x = 5;
-}";
-            var srcmlObject = new Src2SrcMLRunner(Path.Combine(".", "SrcML"));
+            string source = @"int foo() { printf(a); int x = 5; }";
+            var srcmlObject = new Src2SrcMLRunner(Environment.GetEnvironmentVariable("SRCMLBINDIR"));
             var xml = srcmlObject.GenerateSrcMLFromString(source);
 
             var element = XElement.Parse(xml);

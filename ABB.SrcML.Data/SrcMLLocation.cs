@@ -66,8 +66,10 @@ namespace ABB.SrcML.Data {
             if(fileUnit == null)
                 throw new ArgumentNullException("fileUnit");
             this.SourceFileName = SrcMLElement.GetFileNameForUnit(fileUnit);
-            this.StartingLineNumber = element.GetSrcLineNumber();
-            this.StartingColumnNumber = element.GetSrcLinePosition();
+            this.StartingLineNumber = element.GetSrcStartLineNumber();
+            this.StartingColumnNumber = element.GetSrcStartLinePosition(); 
+            this.EndingLineNumber = element.GetSrcEndingLineNumber();
+            this.EndingColumnNumber = element.GetSrcEndingLinePosition();
             this.XPath = element.GetXPath();
             this.IsReference = isReferenceLocation;
             SetEndingLocation(element);
@@ -84,8 +86,10 @@ namespace ABB.SrcML.Data {
             if(element == null)
                 throw new ArgumentNullException("element");
             this.SourceFileName = fileName;
-            this.StartingLineNumber = element.GetSrcLineNumber();
-            this.StartingColumnNumber = element.GetSrcLinePosition();
+            this.StartingLineNumber = element.GetSrcStartLineNumber();
+            this.StartingColumnNumber = element.GetSrcStartLinePosition();
+            this.EndingLineNumber = element.GetSrcEndingLineNumber();
+            this.EndingColumnNumber = element.GetSrcEndingLinePosition();
             this.XPath = element.GetXPath();
             this.IsReference = isReferenceLocation;
             SetEndingLocation(element);
@@ -173,21 +177,9 @@ namespace ABB.SrcML.Data {
         private void SetEndingLocation(XElement element) {
             if(element == null)
                 throw new ArgumentNullException("element");
-            var current = element;
-            XElement nextSibling = null;
-            //navigate up until we find a sibling (or the top of the file)
-            while(nextSibling == null && current != null) {
-                nextSibling = current.ElementsAfterSelf().FirstOrDefault();
-                current = current.Parent;
-            }
 
-            if(null != nextSibling) {
-                this.EndingLineNumber = nextSibling.GetSrcLineNumber();
-                this.EndingColumnNumber = nextSibling.GetSrcLinePosition();
-            } else {
-                this.EndingLineNumber = int.MaxValue;
-                this.EndingColumnNumber = int.MaxValue;
-            }
+            this.EndingLineNumber = element.GetSrcEndingLineNumber();
+            this.EndingColumnNumber = element.GetSrcEndingLinePosition();
         }
     }
 }

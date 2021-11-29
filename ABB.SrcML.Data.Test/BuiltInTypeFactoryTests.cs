@@ -34,7 +34,7 @@ namespace ABB.SrcML.Data.Test {
                 { Language.Java, new JavaCodeParser() },
             };
         }
-
+/*
         [Test]
         [Category("Todo")]
         public void TestCppBuiltIns_WithDoubleWord() {
@@ -62,15 +62,18 @@ namespace ABB.SrcML.Data.Test {
                 }
             }
         }
-
+*/
         [Test]
         public void TestCppBuiltIns_WithSingleWord() {
             // #a.cpp TYPE a; TYPE b;
 
-            string xmlFormat = @"<decl_stmt><decl><type><name>{0}</name></type> <name>a</name></decl>;</decl_stmt>
+            /*string xmlFormat = @"<decl_stmt><decl><type><name>{0}</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>{0}</name></type> <name>b</name></decl>;</decl_stmt>";*/
+
+            string xmlFormat = @"<decl_stmt><decl><type><name>{0}</name></type> <name>a</name></decl>;</decl_stmt> 
 <decl_stmt><decl><type><name>{0}</name></type> <name>b</name></decl>;</decl_stmt>";
 
-            foreach(var builtIn in new string[] { "char", "short", "int", "long", "bool", "float", "double", "wchar_t" }) {
+            foreach (var builtIn in new string[] { "char", "short", "int", "long", "bool", "float", "double", "wchar_t" }) {
                 var aXml = FileUnitSetup[Language.CPlusPlus].GetFileUnitForXmlSnippet(String.Format(xmlFormat, builtIn), "a.cpp");
 
                 var globalScope = CodeParser[Language.CPlusPlus].ParseFileUnit(aXml);
@@ -93,10 +96,13 @@ namespace ABB.SrcML.Data.Test {
         [Test]
         public void TestJavaBuiltIns() {
             // #a.java TYPE a; TYPE b;
-            string xmlFormat = @"<decl_stmt><decl><type><name>{0}</name></type> <name>a</name></decl>;</decl_stmt>
+            /*string xmlFormat = @"<decl_stmt><decl><type><name>{0}</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>{0}</name></type> <name>b</name></decl>;</decl_stmt>";*/
+
+            string xmlFormat = @"<decl_stmt><decl><type><name>{0}</name></type> <name>a</name></decl>;</decl_stmt> 
 <decl_stmt><decl><type><name>{0}</name></type> <name>b</name></decl>;</decl_stmt>";
 
-            foreach(var builtIn in new string[] { "byte", "short", "int", "long", "float", "double", "boolean", "char" }) {
+            foreach (var builtIn in new string[] { "byte", "short", "int", "long", "float", "double", "boolean", "char" }) {
                 var aXml = FileUnitSetup[Language.Java].GetFileUnitForXmlSnippet(String.Format(xmlFormat, builtIn), "a.java");
 
                 var globalScope = CodeParser[Language.Java].ParseFileUnit(aXml);

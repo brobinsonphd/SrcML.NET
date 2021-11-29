@@ -12,7 +12,7 @@ namespace ABB.SrcML.Data.Test {
     [TestFixture]
     [Category("Build")]
     public class MultithreadedAccessTests {
-
+        /*
         [Test]
         public void TestQueryDuringUpdate() {
             var sourceFolder = "TestQueryDuringUpdate";
@@ -51,7 +51,7 @@ namespace ABB.SrcML.Data.Test {
                 developer.Wait();
             }
         }
-
+        */
         private static MethodDefinition GetMethodWithName(AbstractWorkingSet workingSet, int timeout, string methodName) {
             MethodDefinition result = null;
             NamespaceDefinition globalScope;

@@ -226,22 +226,38 @@ namespace ABB.SrcML {
         }
 
         /// <summary>
-        /// Gets the line of source code that contains the given element.
+        /// Gets the starting line of source code that contains the given element.
         /// <para>This differs from <see cref="GetXmlLineNumber"/> in that this is the number of lines relative
         /// to the current <see cref="SRC.Unit"/>; this matches to the line number in the original source file.</para>
         /// </summary>
         /// <param name="element">The element</param>
         /// <returns>The line of source code; -1 if that info is not found.</returns>
-        public static int GetSrcLineNumber(this XElement element) {
+        public static int GetSrcStartLineNumber(this XElement element) {
             if(null == element)
                 throw new ArgumentNullException("element");
 
             int lineNumber = -1;
 
+            var srcLineAttribute = GetAttributeFromSelfOrDescendant(element, POS.Start);
+            if (null != srcLineAttribute)
+            {
+                string[] srcLineLocationStringArray;
+
+                srcLineLocationStringArray = srcLineAttribute.Value.Split(':');
+
+                if (srcLineLocationStringArray.Length > 0)
+                {
+                    Int32.TryParse(srcLineLocationStringArray[0], out lineNumber);
+                    return lineNumber;
+                }              
+            }
+            /* - old single element POS attribute parsing... delete when conversion over
             var srcLineAttribute = GetAttributeFromSelfOrDescendant(element, POS.Line);
-            if(null != srcLineAttribute && Int32.TryParse(srcLineAttribute.Value, out lineNumber)) {
+            if (null != srcLineAttribute && Int32.TryParse(srcLineAttribute.Value, out lineNumber))
+            {
                 return lineNumber;
             }
+            */
 
             int xmlLineNum = element.GetXmlLineNumber();
 
@@ -268,13 +284,33 @@ namespace ABB.SrcML {
         /// </summary>
         /// <param name="element">The element.</param>
         /// <returns>the last line number this element occupies</returns>
-        public static int GetEndingSrcLineNumber(this XElement element) {
-            if(null == element)
+        public static int GetSrcEndingLineNumber(this XElement element) {
+            /*if(null == element)
                 throw new ArgumentNullException("element");
 
             var descendants = element.DescendantsAndSelf();
 
-            return descendants.Last().GetSrcLineNumber();
+            return descendants.Last().GetSrcLineNumber();*/
+
+            if (null == element)
+                throw new ArgumentNullException("element");
+
+            int lineNumber = -1;
+
+            var srcLineAttribute = GetAttributeFromSelfOrDescendant(element, POS.End);
+            if (null != srcLineAttribute)
+            {
+                string[] srcLineLocationStringArray;
+
+                srcLineLocationStringArray = srcLineAttribute.Value.Split(':');
+
+                if (srcLineLocationStringArray.Length > 0)
+                {
+                    Int32.TryParse(srcLineLocationStringArray[0], out lineNumber);
+                    return lineNumber;
+                }
+            }
+            return lineNumber;
         }
 
         /// <summary>
@@ -282,19 +318,85 @@ namespace ABB.SrcML {
         /// </summary>
         /// <param name="element">The element</param>
         /// <returns>The column number that this element starts on. This will return 0 if the element is a Unit and -1 if no line information is present.</returns>
-        public static int GetSrcLinePosition(this XElement element) {
+        public static int GetSrcStartLinePosition(this XElement element) {
             if(null == element)
                 throw new ArgumentNullException("element");
 
             // if element is a unit, just return 0: Source line position does not make sense for a file.
             if(SRC.Unit == element.Name)
-                return 0;
+                return 0;            
 
+            /* old position method for single attribute POS:Column
             var srcPositionAttribute = GetAttributeFromSelfOrDescendant(element, POS.Column);
             int columnNumber = -1;
 
-            if(null != srcPositionAttribute && Int32.TryParse(srcPositionAttribute.Value, out columnNumber)) {
+            if (null != srcPositionAttribute && Int32.TryParse(srcPositionAttribute.Value, out columnNumber)) {
                 return columnNumber;
+            }
+
+            return -1;
+            */
+
+            var srcPositionAttribute = GetAttributeFromSelfOrDescendant(element, POS.Start);
+            int columnNumber = -1;
+
+            var srcLineAttribute = GetAttributeFromSelfOrDescendant(element, POS.Start);
+            if (null != srcLineAttribute)
+            {
+                string[] srcLineLocationStringArray;
+
+                srcLineLocationStringArray = srcLineAttribute.Value.Split(':');
+
+                if (srcLineLocationStringArray.Length > 0)
+                {
+                    Int32.TryParse(srcLineLocationStringArray[1], out columnNumber);
+                    return columnNumber;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Gets the original ending source column number that the given element starts on.
+        /// </summary>
+        /// <param name="element">The element</param>
+        /// <returns>The column number that this element starts on. This will return 0 if the element is a Unit and -1 if no line information is present.</returns>
+        public static int GetSrcEndingLinePosition(this XElement element)
+        {
+            if (null == element)
+                throw new ArgumentNullException("element");
+
+            // if element is a unit, just return 0: Source line position does not make sense for a file.
+            if (SRC.Unit == element.Name)
+                return 0;
+
+            /* old position method for single attribute POS:Column
+            var srcPositionAttribute = GetAttributeFromSelfOrDescendant(element, POS.Column);
+            int columnNumber = -1;
+
+            if (null != srcPositionAttribute && Int32.TryParse(srcPositionAttribute.Value, out columnNumber)) {
+                return columnNumber;
+            }
+
+            return -1;
+            */
+
+            var srcPositionAttribute = GetAttributeFromSelfOrDescendant(element, POS.End);
+            int columnNumber = -1;
+
+            var srcLineAttribute = GetAttributeFromSelfOrDescendant(element, POS.End);
+            if (null != srcLineAttribute)
+            {
+                string[] srcLineLocationStringArray;
+
+                srcLineLocationStringArray = srcLineAttribute.Value.Split(':');
+
+                if (srcLineLocationStringArray.Length > 0)
+                {
+                    Int32.TryParse(srcLineLocationStringArray[1], out columnNumber);
+                    return columnNumber;
+                }
             }
 
             return -1;
@@ -377,21 +479,22 @@ namespace ABB.SrcML {
             }
         }
 
-        private static LineInfo GetLineInfo(XElement element) {
-            IXmlLineInfo ie = (IXmlLineInfo) element;
+        private static LineInfo GetLineInfo(XElement element)
+        {
+            IXmlLineInfo ie = (IXmlLineInfo)element;
 
-            if(ie.HasLineInfo())
+            if (ie.HasLineInfo())
                 return new LineInfo(ie.LineNumber, ie.LinePosition);
             else
                 return element.Annotation<ABB.SrcML.LineInfo>();
         }
 
-        /// <summary>
-        /// <exception cref="SrcMLRequiredNameException">Throws a SrcMLRequiredNameException if <paramref name="name"/> does not match <paramref name="requiredName"/>.</exception>
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="requiredName">Name of the required.</param>
-        public static void ThrowExceptionOnInvalidName(XName name, XName requiredName) {
+            /// <summary>
+            /// <exception cref="SrcMLRequiredNameException">Throws a SrcMLRequiredNameException if <paramref name="name"/> does not match <paramref name="requiredName"/>.</exception>
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="requiredName">Name of the required.</param>
+            public static void ThrowExceptionOnInvalidName(XName name, XName requiredName) {
             if(name != requiredName)
                 throw new SrcMLRequiredNameException(requiredName);
         }

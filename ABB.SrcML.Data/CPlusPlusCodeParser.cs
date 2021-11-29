@@ -117,11 +117,20 @@ namespace ABB.SrcML.Data {
         /// <param name="typeElement">The type typeUseElement</param>
         /// <returns>A collection of type use elements that represent the parent classes</returns>
         protected override IEnumerable<XElement> GetParentTypeUseElements(XElement typeElement) {
-            var superTag = typeElement.Element(SRC.Super);
 
-            if(null != superTag) {
-                return superTag.Elements(SRC.Name);
+            var superTag = typeElement.Element(SRC.SuperList);
+
+            if (superTag != null)
+            {
+                return superTag.Elements(SRC.Super).Elements(SRC.Name);                                
             }
+            else
+            {
+                superTag = typeElement.Element(SRC.Super);
+                if(null != superTag) {
+                    return superTag.Elements(SRC.Name);
+                }                
+            }            
             return Enumerable.Empty<XElement>();
         }
 
@@ -242,26 +251,53 @@ namespace ABB.SrcML.Data {
             };
             typeDefinition.AddLocation(context.CreateLocation(typeElement, ContainerIsReference(typeElement)));
 
-            foreach(var parentTypeElement in GetParentTypeUseElements(typeElement)) {
-                var parentTypeUse = ParseTypeUseElement(parentTypeElement, context);
-                typeDefinition.AddParentType(parentTypeUse);
-            }
-
-            var typeBlock = typeElement.Element(SRC.Block);
-            if(typeBlock != null) {
-                foreach(var child in typeBlock.Elements()) {
-                    if(child.Name == SRC.Private) {
-                        typeDefinition.AddChildStatements(ParseClassChildren(child, context, AccessModifier.Private));
-                    } else if(child.Name == SRC.Protected) {
-                        typeDefinition.AddChildStatements(ParseClassChildren(child, context, AccessModifier.Protected));
-                    } else if(child.Name == SRC.Public) {
-                        typeDefinition.AddChildStatements(ParseClassChildren(child, context, AccessModifier.Public));
-                    } else {
-                        typeDefinition.AddChildStatement(ParseStatement(child, context));
+            if (typeElement.Element(SRC.SuperList) != null)
+            {
+                foreach (var parentTypeElement in GetParentTypeUseElements(typeElement))
+                {
+                    var parentTypeUse = ParseTypeUseElement(parentTypeElement, context);
+                    typeDefinition.AddParentType(parentTypeUse);
+                }
+                // remove the super list element
+                var typeBlock = typeElement.Element(SRC.Block);
+                if(typeBlock != null) {
+                    foreach(var child in typeBlock.Elements()) {
+                        if(child.Name == SRC.Private) {
+                            typeDefinition.AddChildStatements(ParseClassChildren(child, context, AccessModifier.Private));
+                        } else if(child.Name == SRC.Protected) {
+                            typeDefinition.AddChildStatements(ParseClassChildren(child, context, AccessModifier.Protected));
+                        } else if(child.Name == SRC.Public) {
+                            typeDefinition.AddChildStatements(ParseClassChildren(child, context, AccessModifier.Public));
+                        } else {
+                            typeDefinition.AddChildStatement(ParseStatement(child, context));
+                        }
                     }
                 }
             }
+            else
+            {
+                foreach(var parentTypeElement in GetParentTypeUseElements(typeElement)) {
+                    var parentTypeUse = ParseTypeUseElement(parentTypeElement, context);
+                    typeDefinition.AddParentType(parentTypeUse);
+                }
 
+                var typeBlock = typeElement.Element(SRC.Block);
+                if (typeBlock != null)
+                {
+                    foreach (var child in typeBlock.Elements())
+                    {
+                        if(child.Name == SRC.Private) {
+                            typeDefinition.AddChildStatements(ParseClassChildren(child, context, AccessModifier.Private));
+                        } else if(child.Name == SRC.Protected) {
+                            typeDefinition.AddChildStatements(ParseClassChildren(child, context, AccessModifier.Protected));
+                        } else if(child.Name == SRC.Public) {
+                            typeDefinition.AddChildStatements(ParseClassChildren(child, context, AccessModifier.Public));
+                        } else {
+                            typeDefinition.AddChildStatement(ParseStatement(child, context));
+                        }
+                    }
+                }
+            }                      
 
             return typeDefinition;
         }
@@ -281,45 +317,72 @@ namespace ABB.SrcML.Data {
                 throw new ArgumentNullException("context");
 
             Statement stmt = null;
-            bool containsNamespaceKeyword = (from textNode in GetTextNodes(aliasElement)
-                                             where textNode.Value.Contains("namespace")
-                                             select textNode).Any();
-            if(containsNamespaceKeyword) {
+
+            if (aliasElement.Element(SRC.Namespace) != null)
+            {
                 //import statement
-                var import = new ImportStatement() {ProgrammingLanguage = ParserLanguage};
+                var import = new ImportStatement() { ProgrammingLanguage = ParserLanguage };
                 import.AddLocation(context.CreateLocation(aliasElement));
 
-                var nameElement = aliasElement.Element(SRC.Name);
-                if(nameElement != null) {
+                //strip off the namespace element and see if its a name
+                var nameElement = aliasElement.Element(SRC.Namespace).Element(SRC.Name);
+                if (nameElement != null)
+                {
                     import.ImportedNamespace = ParseNameUseElement<NamespaceUse>(nameElement, context);
                 }
 
                 stmt = import;
-            } else {
-                //alias statement
-                var alias = new AliasStatement() {ProgrammingLanguage = ParserLanguage};
-                alias.AddLocation(context.CreateLocation(aliasElement));
-
-                var nameElement = aliasElement.Element(SRC.Name);
-                var initElement = aliasElement.Element(SRC.Init);
-                if(initElement != null) {
-                    //example: using foo = std::bar;
-                    if(nameElement != null) {
-                        alias.AliasName = nameElement.Value;
-                    }
-                    //TODO check this once srcml is updated to see if it's accurate
-                    alias.Target = ParseExpression(GetFirstChildExpression(initElement), context);
-                } else {
-                    //example: using std::cout;
-                    if(nameElement != null) {
-                        alias.Target = ParseTypeUseElement(nameElement, context);
-                        alias.AliasName = NameHelper.GetLastName(nameElement);
-                    }
-                }
-
-                stmt = alias;
             }
+            else
+            {                
+                    //import statement
+                    var import = new ImportStatement() { ProgrammingLanguage = ParserLanguage };
+                    import.AddLocation(context.CreateLocation(aliasElement));
 
+                    bool containsNamespaceKeyword = (from textNode in GetTextNodes(aliasElement)
+                                                     where textNode.Value.Contains("namespace")
+                                                     select textNode).Any();
+                if (containsNamespaceKeyword)
+                {
+                    var nameElement2 = aliasElement.Element(SRC.Name);
+                    if (nameElement2 != null)
+                    {
+                        import.ImportedNamespace = ParseNameUseElement<NamespaceUse>(nameElement2, context);
+                    }
+
+                    stmt = import;
+                }
+                else
+                {
+                    //alias statement
+                    var alias = new AliasStatement() { ProgrammingLanguage = ParserLanguage };
+                    alias.AddLocation(context.CreateLocation(aliasElement));
+
+                    // Strip off the namespace element and get to the name and init elements
+                    var nameElement = aliasElement.Element(SRC.Name);
+                    var initElement = aliasElement.Element(SRC.Init);
+                    if (initElement != null)
+                    {
+                        //example: using foo = std::bar;
+                        if (nameElement != null)
+                        {
+                            alias.AliasName = nameElement.Value;
+                        }
+                        //TODO check this once srcml is updated to see if it's accurate
+                        alias.Target = ParseExpression(GetFirstChildExpression(initElement), context);
+                    }
+                    else
+                    {
+                        //example: using std::cout;
+                        if (nameElement != null)
+                        {
+                            alias.Target = ParseTypeUseElement(nameElement, context);
+                            alias.AliasName = NameHelper.GetLastName(nameElement);
+                        }
+                    }
+                    stmt = alias;
+                }                                
+            }
             return stmt;
         }
 

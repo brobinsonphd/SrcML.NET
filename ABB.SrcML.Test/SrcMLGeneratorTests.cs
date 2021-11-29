@@ -90,7 +90,7 @@ namespace LoggingTransformation
         }
 
         [Test, Category("SrcMLUpdate")]
-        public void TestStrangeEncodings([Values(@"badPathTest\BadPath™\badPathTest.c", @"srcmltest\fooBody.c")] string sourceFileName) {
+        public void TestStrangeEncodings([Values(@"badPathTest\fooBody.c")] string sourceFileName) {
             var xmlFileName = Path.Combine("srcml_xml", Path.GetFileName(Path.ChangeExtension(sourceFileName, ".xml")));
             generator.GenerateSrcMLFromFile(sourceFileName, xmlFileName, Language.C);
             var doc = new SrcMLFile(xmlFileName);
@@ -155,7 +155,7 @@ printf(""hello world!"");
             Assert.AreEqual(3, files.Count());
             Assert.AreEqual("srcmltest\\foo.c", files[0].Attribute("filename").Value);
             Assert.AreEqual("srcmltest\\bar.c", files[1].Attribute("filename").Value);
-            Assert.AreEqual("TestInputs\\baz.cpp", files[2].Attribute("filename").Value);
+            Assert.AreEqual("..\\..\\TestInputs\\baz.cpp", files[2].Attribute("filename").Value);
         }
 
         [Test]

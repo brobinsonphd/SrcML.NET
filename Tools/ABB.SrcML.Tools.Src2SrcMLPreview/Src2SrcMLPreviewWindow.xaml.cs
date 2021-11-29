@@ -42,8 +42,8 @@ namespace ABB.SrcML.Tools.Src2SrcMLPreview
         private string _xml;
         private Language _language;
         private Forms.FolderBrowserDialog directorySelector;
-        private static Collection<string> _namespaceArguments = new Collection<string>() { LIT.ArgumentLabel, OP.ArgumentLabel, TYPE.ArgumentLabel };
-        private static Collection<string> _namespaceArgumentsWithPosition = new Collection<string>() { LIT.ArgumentLabel, OP.ArgumentLabel, TYPE.ArgumentLabel, POS.ArgumentLabel };
+        private static Collection<string> _namespaceArguments = new Collection<string>() { TYPE.ArgumentLabel };
+        private static Collection<string> _namespaceArgumentsWithPosition = new Collection<string>() { TYPE.ArgumentLabel, POS.ArgumentLabel };
 
 
         public SrcMLGenerator XmlGenerator {

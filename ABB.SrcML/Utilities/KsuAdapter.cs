@@ -33,8 +33,8 @@ namespace ABB.SrcML.Utilities
         /// <param name="arguments">the arguments to be combined</param>
         /// <returns>the arguments combined into a string, separated by spaces</returns>
         public static string MakeArgumentString(Collection<string> arguments)
-        {
-            return String.Join(" ", arguments.ToArray());
+        {           
+            return String.Join(" ", arguments.ToArray());                       
         }
 
         /// <summary>
@@ -124,10 +124,9 @@ namespace ABB.SrcML.Utilities
             using(new ErrorModeContext(ErrorModes.FailCriticalErrors | ErrorModes.NoGpFaultErrorBox)) {
                 using (Process p = new Process())
                 {
-                    p.StartInfo.FileName = executableFileName;
+                    p.StartInfo.FileName = executableFileName;                                       
                     p.StartInfo.Arguments = arguments;
-                    p.StartInfo.CreateNoWindow = true;
-
+                    p.StartInfo.CreateNoWindow = true;                    
                     p.StartInfo.UseShellExecute = false;
                     p.StartInfo.RedirectStandardInput = true;
                     p.StartInfo.RedirectStandardOutput = true;

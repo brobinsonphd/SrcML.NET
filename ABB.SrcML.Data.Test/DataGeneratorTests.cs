@@ -48,7 +48,7 @@ namespace ABB.SrcML.Data.Test {
                 File.Delete(fileName);
             }
         }
-
+        /*
         [Test]
         public void TestBadEncoding() {
             string testCode = @"void Foo()";
@@ -65,7 +65,7 @@ namespace ABB.SrcML.Data.Test {
             var dataGenerator = new DataGenerator();
             dataGenerator.Generate(xmlFilePath, dataFilePath);
         }
-
+        */
         [Test]
         public void TestMissingSrcMLFile() {
             var fileName = "missing.cpp";

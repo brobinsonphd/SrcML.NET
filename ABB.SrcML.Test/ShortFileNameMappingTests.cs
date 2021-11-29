@@ -139,9 +139,9 @@ namespace ABB.SrcML.Test {
             File.Copy(@"..\..\TestInputs\nested_scopes.xml", @"mappingTest\nested_scopes.xml", true);
 
             var map = new SrcMLFileNameMapping("mappingTest");
-            Assert.AreEqual(@"C:\Workspaces\SrcML.NET\TestInputs\function_def.cpp", map.GetSourcePath(@"function_def.xml"));
-            Assert.AreEqual(@"C:\Workspaces\SrcML.NET\TestInputs\method_def.cpp", map.GetSourcePath(@"method_def.xml"));
-            Assert.AreEqual(@"C:\Workspaces\SrcML.NET\TestInputs\nested_scopes.c", map.GetSourcePath(@"nested_scopes.xml"));
+            Assert.AreEqual(@"function_def.cpp", map.GetSourcePath(@"function_def.xml"));
+            Assert.AreEqual(@"method_def.cpp", map.GetSourcePath(@"method_def.xml"));
+            Assert.AreEqual(@"nested_scopes.c", map.GetSourcePath(@"nested_scopes.xml"));
         }
 
         [Test]
@@ -152,9 +152,9 @@ namespace ABB.SrcML.Test {
             File.Copy(@"..\..\TestInputs\NotSrcML.xml", @"mappingTest\NotSrcML.xml", true);
 
             var map = new SrcMLFileNameMapping("mappingTest");
-            Assert.AreEqual(@"C:\Workspaces\SrcML.NET\TestInputs\function_def.cpp", map.GetSourcePath(@"function_def.xml"));
-            Assert.AreEqual(@"C:\Workspaces\SrcML.NET\TestInputs\method_def.cpp", map.GetSourcePath(@"method_def.xml"));
-            Assert.AreEqual(@"C:\Workspaces\SrcML.NET\TestInputs\nested_scopes.c", map.GetSourcePath(@"nested_scopes.xml"));
+            Assert.AreEqual(@"function_def.cpp", map.GetSourcePath(@"function_def.xml"));
+            Assert.AreEqual(@"method_def.cpp", map.GetSourcePath(@"method_def.xml"));
+            Assert.AreEqual(@"nested_scopes.c", map.GetSourcePath(@"nested_scopes.xml"));
         }
 
         [Test]
